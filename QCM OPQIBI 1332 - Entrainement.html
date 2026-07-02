@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entraînement QCM OPQIBI 1332 — Études thermiques réglementaires</title>
+<style>
+  :root{--bleu:#2F4A6B;--bleu-clair:#E8EEF5;--rouge:#C1272D;--vert:#2E7D32;--vert-clair:#E8F5E9;--rouge-clair:#FDECEA;--gris:#5A6472;--fond:#F5F6F8;--carte:#FFFFFF;--bord:#D8DEE6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--fond);color:#222;line-height:1.5;}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 16px 60px;}
+  header.site{background:var(--bleu);color:#fff;padding:18px 16px;}
+  header.site .wrap{padding:0;max-width:860px;margin:0 auto;}
+  header.site h1{font-size:1.25rem;font-weight:600;}
+  header.site p{font-size:.85rem;opacity:.85;margin-top:2px;}
+  .card{background:var(--carte);border:1px solid var(--bord);border-radius:10px;padding:22px;margin-top:18px;}
+  .card h2{color:var(--bleu);font-size:1.1rem;margin-bottom:10px;}
+  .card h3{color:var(--bleu);font-size:1rem;margin:14px 0 6px;}
+  .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px;}
+  .mode-btn{display:block;width:100%;text-align:left;background:var(--bleu-clair);border:2px solid transparent;border-radius:10px;padding:16px;cursor:pointer;font:inherit;transition:.15s;}
+  .mode-btn:hover{border-color:var(--bleu);}
+  .mode-btn b{display:block;color:var(--bleu);font-size:1.02rem;margin-bottom:4px;}
+  .mode-btn span{font-size:.85rem;color:var(--gris);}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .pill{background:#fff;border:1.5px solid var(--bleu);color:var(--bleu);border-radius:20px;padding:7px 14px;cursor:pointer;font:inherit;font-size:.88rem;transition:.15s;}
+  .pill:hover,.pill.on{background:var(--bleu);color:#fff;}
+  .notice{background:var(--bleu-clair);border-left:4px solid var(--bleu);padding:12px 14px;border-radius:6px;font-size:.88rem;margin-top:12px;}
+  .notice.warn{background:#FFF7E6;border-left-color:#B7791F;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .chrono{font-size:1.25rem;font-weight:700;color:var(--bleu);background:#fff;border:1px solid var(--bord);border-radius:8px;padding:6px 14px;min-width:110px;text-align:center;}
+  .chrono.low{color:var(--rouge);border-color:var(--rouge);}
+  .prog{font-size:.9rem;color:var(--gris);}
+  .qnum-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .qnum{width:34px;height:34px;border-radius:6px;border:1px solid var(--bord);background:#fff;cursor:pointer;font:inherit;font-size:.82rem;}
+  .qnum.answered{background:var(--bleu);color:#fff;border-color:var(--bleu);}
+  .qnum.flagged{outline:2px solid #B7791F;}
+  .qnum.current{box-shadow:0 0 0 2px var(--rouge);}
+  .question-text{font-size:1.05rem;font-weight:600;margin:6px 0 4px;}
+  .theme-tag{display:inline-block;font-size:.75rem;background:var(--bleu-clair);color:var(--bleu);border-radius:4px;padding:2px 8px;margin-bottom:8px;}
+  .opts{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+  .opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--bord);border-radius:8px;padding:11px 13px;cursor:pointer;background:#fff;font:inherit;text-align:left;transition:.12s;}
+  .opt:hover{border-color:var(--bleu);}
+  .opt.sel{border-color:var(--bleu);background:var(--bleu-clair);}
+  .opt.good{border-color:var(--vert);background:var(--vert-clair);}
+  .opt.bad{border-color:var(--rouge);background:var(--rouge-clair);}
+  .opt .letter{font-weight:700;color:var(--bleu);min-width:20px;}
+  .expl{margin-top:14px;border-radius:8px;padding:13px 15px;font-size:.92rem;display:none;}
+  .expl.show{display:block;}
+  .expl.ok{background:var(--vert-clair);border-left:4px solid var(--vert);}
+  .expl.ko{background:var(--rouge-clair);border-left:4px solid var(--rouge);}
+  .expl .ref{display:block;margin-top:8px;font-size:.8rem;color:var(--gris);font-style:italic;}
+  .nav-row{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .btn{background:var(--bleu);color:#fff;border:none;border-radius:8px;padding:11px 20px;font:inherit;font-size:.95rem;cursor:pointer;}
+  .btn:hover{filter:brightness(1.1);}
+  .btn.sec{background:#fff;color:var(--bleu);border:1.5px solid var(--bleu);}
+  .btn.danger{background:var(--rouge);}
+  .btn:disabled{opacity:.4;cursor:default;}
+  .score-big{font-size:2.6rem;font-weight:800;text-align:center;margin:10px 0 2px;}
+  .score-big.pass{color:var(--vert);}
+  .score-big.fail{color:var(--rouge);}
+  .verdict{text-align:center;font-size:1.05rem;margin-bottom:14px;}
+  .theme-stats{margin-top:14px;}
+  .theme-stats table{width:100%;border-collapse:collapse;font-size:.88rem;}
+  .theme-stats th,.theme-stats td{border:1px solid var(--bord);padding:7px 9px;text-align:left;}
+  .theme-stats th{background:var(--bleu-clair);color:var(--bleu);}
+  .bar{height:8px;background:#E4E7EC;border-radius:4px;overflow:hidden;min-width:80px;}
+  .bar i{display:block;height:100%;background:var(--vert);}
+  .review-q{border-top:1px solid var(--bord);padding:16px 0;}
+  .review-q .qt{font-weight:600;}
+  .review-q .ua{margin-top:6px;font-size:.9rem;}
+  .review-q .ua.wrong{color:var(--rouge);}
+  .review-q .ua.right{color:var(--vert);}
+  .review-q .ex{margin-top:6px;font-size:.88rem;background:var(--bleu-clair);border-radius:6px;padding:10px 12px;}
+  .review-q .ex .ref{display:block;margin-top:6px;font-size:.78rem;color:var(--gris);font-style:italic;}
+  .hidden{display:none;}
+  .footer-note{margin-top:26px;font-size:.78rem;color:var(--gris);text-align:center;}
+  .flag-btn{background:none;border:1.5px solid #B7791F;color:#B7791F;border-radius:8px;padding:8px 14px;font:inherit;font-size:.85rem;cursor:pointer;}
+  .flag-btn.on{background:#B7791F;color:#fff;}
+  @media (max-width:560px){.nav-row{flex-direction:column;}.btn{width:100%;}}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <h1>Entraînement QCM — OPQIBI 1332</h1>
+  <p>Études thermiques réglementaires bâtiment neuf · RE2020 (majoritaire) + fondamentaux RT2012 · 121 questions</p>
+</div></header>
+<div class="wrap">
+
+  <!-- ACCUEIL -->
+  <div id="home">
+    <div class="card">
+      <h2>Conditions réelles de l'épreuve (dispositif « RGE Études »)</h2>
+      <p style="font-size:.92rem">QCM de <b>30 questions</b> tirées aléatoirement d'une base ADEME · <b>45 minutes</b> · <b>aucun document autorisé</b> · seuil de réussite <b>80&nbsp;%</b> (24/30) · calculatrice scientifique fournie · 2 rattrapages possibles, puis carence de 6 mois.</p>
+      <div class="notice warn">Modalités issues du document OPQIBI du 08/06/2020 (« Contrôle individuel de connaissances QCM — RGE Études »). À confirmer lors de ton inscription : elles peuvent avoir évolué.</div>
+    </div>
+    <div class="card">
+      <h2>Choisis un mode</h2>
+      <div class="modes">
+        <button class="mode-btn" onclick="startExam('rand')"><b>Examen blanc aléatoire</b><span>30 questions tirées au hasard dans toute la banque — le plus proche du réel. Chrono 45 min.</span></button>
+        <button class="mode-btn" onclick="showSeries()"><b>Examen blanc — série fixe</b><span>4 séries préparées de 30 questions équilibrées par thème. Chrono 45 min.</span></button>
+        <button class="mode-btn" onclick="showThemes()"><b>Révision par thème</b><span>Feedback immédiat après chaque réponse, avec explication et référence réglementaire.</span></button>
+        <button class="mode-btn" id="errBtn" onclick="startErrors()" disabled><b>Rejouer mes erreurs</b><span id="errCount">Aucune erreur enregistrée pour l'instant (session en cours uniquement).</span></button>
+      </div>
+      <div id="seriesPick" class="hidden">
+        <h3>Choisis une série</h3>
+        <div class="pill-row">
+          <button class="pill" onclick="startExam(1)">Série 1</button>
+          <button class="pill" onclick="startExam(2)">Série 2</button>
+          <button class="pill" onclick="startExam(3)">Série 3</button>
+          <button class="pill" onclick="startExam(4)">Série 4</button>
+        </div>
+      </div>
+      <div id="themePick" class="hidden">
+        <h3>Choisis un thème</h3>
+        <div class="pill-row" id="themePills"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Conseil d'utilisation sur 6 jours</h2>
+      <p style="font-size:.9rem">J1-J2 : révision par thème (RE2020 d'abord). J3 : série 1 en conditions réelles puis analyse des erreurs. J4 : révision ciblée + série 2. J5 : séries 3 et 4. J6 (veille) : examens blancs aléatoires + « rejouer mes erreurs ». Vise 85-90 % en entraînement pour sécuriser les 80 % le jour J.</p>
+    </div>
+    <p class="footer-note">Outil d'entraînement préparé pour Pierre — ECOME · Corrigés adossés aux textes (décrets 2021-1004, 2022-305, 2024-1258, 2026-16, 2026-200), au guide RE2020 DHUP (éd. 16/05/2025), aux fiches d'application et aux règles Th-Bat. Ne remplace pas les textes officiels.</p>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="hidden">
+    <div class="topbar">
+      <div class="prog" id="progTxt"></div>
+      <div class="chrono hidden" id="chrono">45:00</div>
+      <button class="flag-btn hidden" id="flagBtn" onclick="toggleFlag()">Marquer</button>
+    </div>
+    <div class="qnum-grid hidden" id="qgrid"></div>
+    <div class="card">
+      <span class="theme-tag" id="qTheme"></span>
+      <div class="question-text" id="qText"></div>
+      <div class="opts" id="qOpts"></div>
+      <div class="expl" id="qExpl"></div>
+      <div class="nav-row">
+        <button class="btn sec" id="prevBtn" onclick="go(-1)">Précédent</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn danger hidden" id="submitBtn" onclick="finishExam(false)">Rendre ma copie</button>
+          <button class="btn" id="nextBtn" onclick="go(1)">Suivant</button>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row"><button class="btn sec" onclick="quitToHome()">Quitter (abandonner)</button></div>
+  </div>
+
+  <!-- RESULTATS -->
+  <div id="results" class="hidden">
+    <div class="card">
+      <div class="score-big" id="scoreBig"></div>
+      <div class="verdict" id="verdict"></div>
+      <div class="theme-stats" id="themeStats"></div>
+    </div>
+    <div class="card">
+      <h2>Correction détaillée</h2>
+      <div id="reviewList"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn" onclick="quitToHome()">Retour à l'accueil</button>
+      <button class="btn sec" id="replayErrBtn" onclick="startErrors()">Rejouer mes erreurs</button>
+    </div>
+  </div>
+
+</div>
+<script>
+"use strict";
+/* ============================================================
+   BANQUE DE QUESTIONS — 120 questions
+   {s: série 1-4, t: thème, q: énoncé, o: [4 options], c: index bonne réponse (0-3),
+    e: explication, r: référence}
+   ============================================================ */
+const THEMES = ["Champ d'application","Indicateurs et exigences","Méthode et conventions","Enveloppe et Th-Bat","Systèmes et équipements","Confort d'été","Attestations et procédures","RT2012","Cas particuliers et fiches d'application"];
+const BANK = [
+/* ---------- SÉRIE 1 ---------- */
+{s:1,t:0,q:"La RE2020 s'applique aux constructions de bâtiments ou parties de bâtiments à usage d'habitation dont la demande de permis de construire est déposée à compter du :",
+ o:["1er janvier 2021","1er janvier 2022","1er juillet 2022","1er janvier 2023"],c:1,
+ e:"L'article R.172-1 du CCH fixe l'entrée en application au 1er janvier 2022 pour l'habitation. Exception : les projets ayant donné lieu à un contrat de louage d'ouvrage ou un CCMI signé avant le 1er octobre 2021 restent hors champ.",
+ r:"Décret n° 2021-1004 du 29/07/2021, art. R.172-1 CCH"},
+{s:1,t:0,q:"Pour les bâtiments de bureaux et d'enseignement primaire ou secondaire, la RE2020 s'applique aux demandes de PC déposées à compter du :",
+ o:["1er janvier 2022","1er juillet 2022","1er janvier 2023","1er juillet 2023"],c:1,
+ e:"L'habitation est entrée en RE2020 au 1/1/2022, les bureaux et l'enseignement primaire/secondaire au 1/7/2022, puis les extensions, constructions provisoires et HLL au 1/1/2023.",
+ r:"Décret n° 2021-1004, art. R.172-1 CCH"},
+{s:1,t:0,q:"Les exigences Bbio, Cep, Cep,nr, Icénergie et DH de la RE2020 ne s'appliquent qu'aux parties de bâtiment :",
+ o:["dont la surface dépasse 50 m²","chauffées à plus de 19 °C en utilisation normale","chauffées à plus de 12 °C ou refroidies à moins de 30 °C en utilisation normale, et aux parcs de stationnement associés","équipées d'un système de chauffage fixe"],c:2,
+ e:"Le critère du champ « thermique » est une température normale d'utilisation supérieure à 12 °C (chauffage) ou inférieure à 30 °C (refroidissement). Les parcs de stationnement associés sont inclus (éclairage, ventilation). L'exigence Icconstruction, elle, s'applique à tout le bâtiment.",
+ r:"Décret n° 2021-1004, art. R.172-4 CCH, dernier alinéa"},
+{s:1,t:1,q:"Parmi ces indicateurs RE2020, lequel est calculé à titre purement informatif (sans seuil réglementaire) ?",
+ o:["Cep,nr","Icénergie","Icconstruction","Icbâtiment"],c:3,
+ e:"Les 5 exigences de résultat portent sur Bbio, Cep et Cep,nr, Icénergie, Icconstruction et DH. Icbâtiment (somme Icconstruction + Icénergie + impact de l'eau) et StockC (carbone stocké) sont calculés à titre informatif.",
+ r:"Décret n° 2021-1004, art. R.172-4 CCH, 6° et 7°"},
+{s:1,t:1,q:"La valeur moyenne de l'exigence Bbio_max (avant modulations) pour une maison individuelle ou accolée est de :",
+ o:["60 points","63 points","65 points","75 points"],c:1,
+ e:"Bbio_maxmoyen = 63 points en maison individuelle ou accolée, 65 points en logement collectif. À comparer aux 95 points des bureaux et 68 points de l'enseignement. Le piège « 60 » correspond au Bbiomaxmoyen de la RT2012.",
+ r:"Décret n° 2021-1004, annexe art. R.172-4, chap. III"},
+{s:1,t:1,q:"La valeur moyenne de Cep_max (avant modulations) pour un logement collectif est de :",
+ o:["55 kWhep/m²/an","70 kWhep/m²/an","75 kWhep/m²/an","85 kWhep/m²/an"],c:3,
+ e:"Logements collectifs : Cep_maxmoyen = 85 kWhep/m²/an et Cep,nr_maxmoyen = 70. Maisons individuelles : Cep_max 75 et Cep,nr 55. Retiens les couples MI 55/75 et LC 70/85.",
+ r:"Décret n° 2021-1004, annexe art. R.172-4, chap. III"},
+{s:1,t:1,q:"Pour un logement collectif dont le PC est déposé en 2026, la valeur moyenne du seuil Icconstruction_max est de :",
+ o:["740 kg éq. CO2/m²","650 kg éq. CO2/m²","580 kg éq. CO2/m²","490 kg éq. CO2/m²"],c:1,
+ e:"Jalons Icconstruction_maxmoyen en logement collectif : 740 (PC 2022-2024), 650 (2025-2027), 580 (2028-2030), 490 (à partir de 2031). En maison individuelle : 640 / 530 / 475 / 415.",
+ r:"Décret n° 2021-1004, annexe art. R.172-4, chap. III"},
+{s:1,t:2,q:"La méthode de calcul réglementaire de la partie énergie et confort d'été de la RE2020 s'appelle :",
+ o:["Th-BCE 2012","Th-BCE 2020","Th-CE ex","3CL-2021"],c:1,
+ e:"Le moteur de calcul énergie/confort de la RE2020 est Th-BCE 2020 (annexe de l'arrêté du 4 août 2021), évolution de Th-BCE 2012. 3CL est la méthode du DPE, Th-CE ex celle de la RT existant globale. La nomenclature OPQIBI mentionne « Th-BCD 2020 » pour couvrir énergie + données environnementales.",
+ r:"Arrêté du 4 août 2021 (exigences et méthode) ; guide RE2020 DHUP éd. 16/05/2025"},
+{s:1,t:2,q:"En RE2020, la surface de référence Sref d'un bâtiment d'habitation est :",
+ o:["la SHONrt","la surface de plancher au sens de l'urbanisme","la surface habitable (SHAB)","la surface utile (SU)"],c:2,
+ e:"Sref = SHAB pour l'habitation et SU pour les autres usages (bureaux, enseignement...). C'est un changement majeur vs RT2012 qui utilisait la SHONrt/SRT : les valeurs par m² RE2020 et RT2012 ne sont donc pas directement comparables.",
+ r:"Décret n° 2021-1004, annexe art. R.172-4, chap. I, X"},
+{s:1,t:2,q:"En RE2020, le coefficient de conversion de l'électricité en énergie primaire vaut :",
+ o:["1","2,3","2,58","3,16"],c:1,
+ e:"Le coefficient d'énergie primaire de l'électricité est passé de 2,58 (RT2012) à 2,3 (RE2020). Gaz, fioul, charbon : 1. Bois : 1 en énergie primaire totale, 0 en énergie primaire non renouvelable.",
+ r:"Arrêté du 4 août 2021 ; guide RE2020 DHUP"},
+{s:1,t:2,q:"Le pas de temps de la simulation Th-BCE 2020 est :",
+ o:["mensuel","hebdomadaire","horaire","au pas de 10 minutes"],c:2,
+ e:"Th-BCE 2020 est une méthode de calcul horaire (8 760 pas de temps par an), sur des scénarios conventionnels d'occupation et de météo. Ce n'est pas une simulation thermique dynamique libre : les conventions sont imposées.",
+ r:"Méthode Th-BCE 2020, annexe de l'arrêté du 4 août 2021"},
+{s:1,t:3,q:"Le coefficient b utilisé dans le calcul des déperditions caractérise :",
+ o:["la perméabilité à l'air d'une paroi","l'atténuation des déperditions vers un local non chauffé (espace tampon)","l'absorptivité solaire d'une paroi opaque","l'inertie quotidienne du bâtiment"],c:1,
+ e:"b est le coefficient de réduction des déperditions vers un espace non chauffé (0 ≤ b ≤ 1). Il dépend du ratio entre surfaces donnant sur l'espace tampon (Aiu) et surfaces de l'espace tampon vers l'extérieur (Aue), et de leur isolation. b = 1 équivaut à l'extérieur.",
+ r:"Règles Th-Bat (Th-U) ; fiche d'application « usage et exigence » (espaces tampons)"},
+{s:1,t:3,q:"Un mur est composé de béton (R = 0,10 m².K/W) et d'un isolant de R = 3,15 m².K/W. Avec Rsi = 0,13 et Rse = 0,04 m².K/W, son coefficient U vaut environ :",
+ o:["0,25 W/(m².K)","0,29 W/(m².K)","0,32 W/(m².K)","0,35 W/(m².K)"],c:1,
+ e:"U = 1/ΣR = 1/(0,10 + 3,15 + 0,13 + 0,04) = 1/3,42 ≈ 0,29 W/(m².K). Réflexe : toujours ajouter les résistances superficielles Rsi et Rse aux résistances des couches. Une calculatrice est disponible à l'examen.",
+ r:"Règles Th-Bat, calcul des parois opaques"},
+{s:1,t:3,q:"En RE2020, le garde-fou sur les ponts thermiques impose que le ratio de transmission thermique linéique moyen global soit au plus de :",
+ o:["0,28 W/(m²Sref.K)","0,33 W/(m²Sref.K)","0,6 W/(m²Sref.K)","1,0 W/(m²Sref.K)"],c:1,
+ e:"RE2020 : ratio ψ moyen ≤ 0,33 W/(m² Sref.K) ET ψ de la liaison plancher intermédiaire-mur (ψ9) ≤ 0,6 W/(m.K). En RT2012 le ratio était 0,28 W/(m².K) mais rapporté à la SHONrt — la différence de valeur vient surtout du changement de surface de référence.",
+ r:"Arrêté du 4 août 2021 (caractéristiques minimales) ; guide RE2020 DHUP"},
+{s:1,t:4,q:"Par rapport à la RT2012, quels usages énergétiques supplémentaires sont comptabilisés dans le Cep de la RE2020 ?",
+ o:["Aucun, le périmètre est identique","L'électroménager et l'informatique des occupants","La mobilité interne (ascenseurs, escalators), l'éclairage et la ventilation des parkings, l'éclairage des circulations en collectif","Uniquement le refroidissement, absent de la RT2012"],c:2,
+ e:"La RE2020 conserve les 5 usages RT2012 (chauffage, refroidissement, ECS, éclairage, auxiliaires) et ajoute la mobilité interne (ascenseurs/escalators), l'éclairage et la ventilation des parkings et l'éclairage des circulations des logements collectifs. Les usages mobiliers (électroménager, bureautique) restent hors périmètre.",
+ r:"Décret n° 2021-1004, art. R.172-4, 2° ; guide RE2020 DHUP"},
+{s:1,t:4,q:"Pour un bâtiment chauffé au bois, le facteur de conversion en énergie primaire non renouvelable (pour Cep,nr) appliqué au bois est :",
+ o:["0","0,6","1","2,3"],c:0,
+ e:"Le bois-énergie est considéré 100 % renouvelable : coefficient 1 pour le Cep (énergie primaire totale) mais 0 pour le Cep,nr. C'est pourquoi les solutions biomasse sont très favorables sur l'indicateur Cep,nr.",
+ r:"Arrêté du 4 août 2021 ; guide RE2020 DHUP"},
+{s:1,t:4,q:"Dans un assemblage de génération Th-BCE desservant chauffage et ECS, la priorité conventionnelle du générateur est donnée :",
+ o:["au chauffage","à l'ECS","au poste ayant la puissance appelée la plus élevée","à parts égales entre les deux postes"],c:1,
+ e:"Dans la méthode, l'ECS est conventionnellement prioritaire sur le chauffage au sein d'un assemblage de génération (logique « priorité sanitaire » des chaudières mixtes et PAC double service).",
+ r:"Méthode Th-BCE ; tuto de saisie Pleiades (générations)"},
+{s:1,t:4,q:"En saisie réglementaire, un ascenseur peut être décrit :",
+ o:["dans tous les usages, y compris maison individuelle","uniquement en logement collectif, bureaux et enseignement (pas en maison individuelle)","uniquement si sa vitesse dépasse 1 m/s","uniquement dans les IGH"],c:1,
+ e:"La méthode ne prévoit pas d'ascenseur en maison individuelle (la consommation serait comptée à 0 — saisie non valorisée). En collectif et tertiaire, l'ascenseur est saisi avec sa charge, sa course, sa technologie (traction, gearless, hydraulique) et sa puissance de veille Pti.",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (ascenseur)"},
+{s:1,t:5,q:"L'indicateur DH (degrés-heures d'inconfort estival) mesure :",
+ o:["le nombre d'heures où la température extérieure dépasse 30 °C","la somme, sur l'année, des écarts horaires entre la température opérative intérieure et la température de confort adaptative","le nombre de jours de canicule du fichier météo","la durée de fonctionnement de la climatisation"],c:1,
+ e:"DH = Σ max(0 ; Top - Tconfort) sur les 8 760 heures, exprimé en °C.h. Il cumule durée ET intensité de l'inconfort. La température de confort est adaptative : elle évolue avec les températures extérieures des jours précédents.",
+ r:"Décret n° 2021-1004, annexe chap. I, VI ; guide RE2020 DHUP"},
+{s:1,t:5,q:"Entre le seuil bas de 350 °C.h et le seuil maximal DH_max, la méthode RE2020 :",
+ o:["déclenche la non-conformité du projet","ajoute une consommation forfaitaire de refroidissement au Cep (climatisation fictive)","impose l'installation de brasseurs d'air","réduit le Bbio_max de 10 %"],c:1,
+ e:"En dessous de 350 °C.h : conforme sans pénalité. Entre 350 et DH_max : conforme, mais une consommation de refroidissement fictive est ajoutée (pénalise Cep/Cep,nr) pour anticiper l'installation future d'une clim. Au-delà de DH_max : non conforme.",
+ r:"Guide RE2020 DHUP (confort d'été) ; méthode Th-BCE 2020"},
+{s:1,t:5,q:"Le DH_max d'une maison individuelle en catégorie 1 de contraintes extérieures est de :",
+ o:["350 °C.h","1 250 °C.h","1 850 °C.h","2 600 °C.h"],c:1,
+ e:"Maison individuelle : DH_max = 1 250 °C.h en catégorie 1 et 1 850 °C.h en catégorie 2 (zones où l'ouverture des baies est contrainte : bruit, climat chaud). 350 °C.h est le seuil bas de déclenchement de la clim fictive.",
+ r:"Décret n° 2021-1004, annexe chap. III, IV"},
+{s:1,t:5,q:"La température intérieure de confort utilisée pour le calcul des DH est :",
+ o:["fixe à 28 °C jour et nuit","fixe à 26 °C jour et nuit","adaptative : 26 °C la nuit, et de 26 à 28 °C le jour selon les températures des jours précédents","égale à la température de consigne de refroidissement saisie"],c:2,
+ e:"La RE2020 retient un confort adaptatif : la nuit le seuil reste à 26 °C (sommeil), le jour il glisse de 26 à 28 °C quand la période chaude s'installe (accoutumance des occupants).",
+ r:"Guide RE2020 DHUP (confort d'été)"},
+{s:1,t:6,q:"En RE2020, le récapitulatif standardisé qui synthétise l'étude énergétique et environnementale s'appelle :",
+ o:["RSET","RSEE","DPE neuf","Récapitulatif Th-BCE"],c:1,
+ e:"Le RSEE (Récapitulatif Standardisé d'Étude Énergétique et Environnementale) est le format XML réglementaire RE2020 : il contient le volet énergie et le volet environnemental (ACV). Le RSET était son équivalent RT2012 — c'est d'ailleurs le RSET qui est demandé pour les références OPQIBI 1332 en RT2012.",
+ r:"Arrêtés RE2020 (transmission des données) ; guide RE2020 DHUP"},
+{s:1,t:6,q:"Au dépôt du permis de construire d'un bâtiment soumis à la RE2020, l'attestation de prise en compte porte notamment sur :",
+ o:["le Bbio uniquement, comme en RT2012","le Bbio et le DH (confort d'été), plus des engagements (faisabilité, ACV)","les 6 indicateurs réglementaires","le Cep et l'Icconstruction"],c:1,
+ e:"Au PC, l'attestation RE2020 vérifie Bbio ≤ Bbio_max ET DH ≤ DH_max (nouveauté vs RT2012 qui ne vérifiait que le Bbio), l'accès à l'éclairage naturel, et des engagements du maître d'ouvrage (étude de faisabilité énergétique, réalisation de l'ACV). Les autres indicateurs sont vérifiés à l'achèvement.",
+ r:"Guide RE2020 DHUP (attestations) ; décret et arrêté attestations"},
+{s:1,t:6,q:"À l'achèvement des travaux d'une maison individuelle RE2020, l'attestation peut être établie par :",
+ o:["uniquement un contrôleur technique","uniquement l'architecte de l'opération","un architecte, un diagnostiqueur DPE, un contrôleur technique ou un organisme de certification","le bureau d'études thermiques auteur du calcul"],c:2,
+ e:"Quatre familles d'acteurs peuvent attester à l'achèvement : architecte, contrôleur technique, organisme certificateur, et — pour les maisons individuelles ou accolées — diagnostiqueur DPE. Le BET auteur de l'étude ne peut pas s'auto-attester.",
+ r:"CCH (attestations) ; guide RE2020 DHUP"},
+{s:1,t:7,q:"En RT2012, la valeur moyenne du Cepmax (avant modulations) est de :",
+ o:["40 kWhep/m²SHONrt/an","50 kWhep/m²SHONrt/an","57,5 kWhep/m²SHONrt/an","65 kWhep/m²SHONrt/an"],c:1,
+ e:"Cepmax RT2012 = 50 × Mctype × (Mcgéo + Mcalt + Mcsurf + McGES) en kWhep/m²SHONrt/an. Les 50 kWhep sont l'emblème du BBC généralisé. En RE2020, les valeurs (55-85) ne sont pas comparables car rapportées à la SHAB/SU.",
+ r:"Arrêté du 26 octobre 2010, art. 4"},
+{s:1,t:7,q:"Les 5 usages comptabilisés dans le Cep de la RT2012 sont :",
+ o:["chauffage, refroidissement, ECS, éclairage, auxiliaires (ventilation et distribution)","chauffage, refroidissement, ECS, cuisson, électroménager","chauffage, ECS, éclairage, parkings, ascenseurs","chauffage, refroidissement, ventilation, cuisson, éclairage"],c:0,
+ e:"RT2012 : chauffage, refroidissement, production d'ECS, éclairage et auxiliaires (pompes de distribution, ventilateurs). La RE2020 y ajoute mobilité interne, parkings et circulations communes.",
+ r:"Arrêté du 26 octobre 2010, art. 4"},
+{s:1,t:7,q:"La surface de référence des calculs RT2012 en logement est :",
+ o:["la SHAB","la SHONrt","la surface de plancher","la SU"],c:1,
+ e:"La RT2012 utilise la SHONrt (surface hors œuvre nette au sens de la RT). La RE2020 passe à la SHAB (habitation) et à la SU (autres usages). Piège classique de QCM sur la correspondance réglementation/surface.",
+ r:"Arrêté du 26 octobre 2010 ; annexe III arrêté du 28/12/2012"},
+{s:1,t:8,q:"D'après la fiche d'application « extensions et petites surfaces », une extension de maison individuelle de 100 m² de Sref est soumise à :",
+ o:["aux seules exigences de moyens","au Bbio, au DH et aux Ic uniquement","à la RE2020 complète","à la RT existant par élément"],c:2,
+ e:"Extensions de MI : ≤ 50 m² → exigences de moyens ; entre 50 et 80 m² → Bbio, DH et exigences Ic (sans Cep) ; ≥ 80 m² → RE2020 complète. À 100 m², la RE2020 s'applique donc intégralement.",
+ r:"Fiche d'application RE2020 « Extension et construction de petite surface » v1.1 (04/2025)"},
+{s:1,t:8,q:"Une partie de bâtiment d'un usage différent de l'usage principal peut être assimilée à l'usage principal si sa surface de référence est :",
+ o:["≤ 300 m² et ≤ 20 % de la surface de l'usage principal","≤ 150 m² et ≤ 10 % de la surface de l'usage principal","≤ 100 m² quelle que soit la proportion","≤ 50 m² et ≤ 5 % de la surface de l'usage principal"],c:1,
+ e:"Double condition cumulative : Sref ≤ 150 m² ET ≤ 10 % de la surface de la zone d'usage principal. Exception notable : une maison individuelle ne peut jamais être assimilée à un autre usage.",
+ r:"Fiche d'application RE2020 « Usage d'un bâtiment et exigence associée » v1.2 (10/2025)"},
+/* ---------- SÉRIE 2 ---------- */
+{s:2,t:0,q:"La RE2020 (section 1 du chapitre II du titre VII du CCH) s'applique-t-elle dans les départements et régions d'outre-mer ?",
+ o:["Oui, partout en France","Oui, sauf à Mayotte","Non : elle ne s'applique pas en Guadeloupe, Guyane, Martinique, à La Réunion et à Mayotte","Non, sauf pour les bâtiments de l'État"],c:2,
+ e:"L'article R.172-1 III exclut explicitement les cinq DROM, qui relèvent de la RTAA DOM. Les références d'études thermiques situées dans les territoires d'outre-mer ne sont d'ailleurs pas recevables pour la qualification OPQIBI 1332.",
+ r:"Décret n° 2021-1004, art. R.172-1, III"},
+{s:2,t:0,q:"Une résidence de tourisme dont les logements disposent d'un local de sommeil, d'une cuisine et de sanitaires est soumise :",
+ o:["aux règles RE2020 des bâtiments d'habitation","aux règles RE2020 des hôtels","à la RT2012 « autres usages »","à aucune réglementation thermique"],c:0,
+ e:"Le décret le précise expressément : les résidences de tourisme disposant d'un local de sommeil, d'une cuisine et de sanitaires suivent les règles applicables à l'habitation. La présence d'une cuisine est le critère de partage récurrent (idem foyers, résidences étudiantes, EHPAD).",
+ r:"Décret n° 2021-1004, art. R.172-1, I"},
+{s:2,t:0,q:"Les constructions provisoires et les habitations légères de loisirs (HLL) exonérées de permis de construire entrent dans le champ de la RE2020 à compter du :",
+ o:["1er janvier 2022","1er juillet 2022","1er janvier 2023","1er mai 2026"],c:2,
+ e:"Troisième jalon d'entrée en vigueur : 1er janvier 2023 pour les extensions, les constructions provisoires et les HLL. Des exigences alternatives adaptées sont définies par arrêté pour ces catégories (fiches d'application dédiées).",
+ r:"Décret n° 2021-1004, art. R.172-1, II"},
+{s:2,t:1,q:"La formule de calcul du Bbio_max en RE2020 est :",
+ o:["Bbio_maxmoyen × Mbgéo × Mbcombles × Mbsurf_moy × Mbsurf_tot × Mbbruit","Bbio_maxmoyen × (1 + Mbgéo + Mbcombles + Mbsurf_moy + Mbsurf_tot + Mbbruit)","Bbio_maxmoyen + Mbgéo + Mbcombles + Mbsurf_moy + Mbsurf_tot + Mbbruit","Bbio_maxmoyen × (Mbgéo + Mbcombles + Mbsurf_moy + Mbsurf_tot)"],c:1,
+ e:"Les modulations RE2020 du Bbio_max sont additives dans la parenthèse : ×(1 + ΣM). Piège vs RT2012 où Bbiomax = Bbiomaxmoyen × (Mbgéo + Mbalt + Mbsurf) sans le « 1 + ». Depuis le décret 2026-200 (PC au 1/7/2026), une modulation MbHSP (hauteur sous plafond) s'ajoute à la somme.",
+ r:"Décret n° 2021-1004, annexe chap. II, I ; décret n° 2026-200"},
+{s:2,t:1,q:"Le coefficient Mbbruit de modulation du Bbio_max est non nul :",
+ o:["dans toutes les zones de bruit","en zones BR2 et BR3, pour certaines zones climatiques seulement","uniquement à proximité des aéroports","en zone BR1 uniquement"],c:1,
+ e:"Mbbruit vaut 0 en BR1 partout, et devient positif en BR2/BR3 uniquement dans certaines zones climatiques (par ex. 0,1 en H2d et H3 pour les maisons individuelles ; jusqu'à 0,2 en collectif). Un site bruyant limite l'ouverture des baies et le rafraîchissement passif, d'où un besoin majoré toléré.",
+ r:"Décret n° 2021-1004, annexe chap. III, I"},
+{s:2,t:1,q:"Pour une maison individuelle, la valeur moyenne du seuil Icénergie_max est de :",
+ o:["160 kg éq. CO2/m², stable de 2022 à 2031","560 kg éq. CO2/m² jusqu'en 2024 puis 260","280 kg éq. CO2/m² jusqu'en 2025","75 kg éq. CO2/m² dès 2022"],c:0,
+ e:"En maison individuelle, Icénergie_maxmoyen = 160 kg éq. CO2/m² dès 2022, sans jalon dégressif : ce seuil exclut de fait le chauffage fioul et rend le gaz très difficile dès l'origine (sauf dérogation temporaire à 280 pour les parcelles avec permis d'aménager prévoyant le gaz, PC déposé avant fin 2023).",
+ r:"Décret n° 2021-1004, annexe chap. III, II"},
+{s:2,t:1,q:"En logement collectif, le seuil Icénergie_maxmoyen applicable aux PC 2025-2027 pour un bâtiment raccordé à un réseau de chaleur urbain est de :",
+ o:["160 kg éq. CO2/m²","260 kg éq. CO2/m²","320 kg éq. CO2/m²","560 kg éq. CO2/m²"],c:2,
+ e:"Logements collectifs : 560 (2022-2024) pour tous, puis à partir de 2025 : 320 si raccordé à un RCU (délai supplémentaire de verdissement accordé aux réseaux), 260 sinon, et 260 pour tous à partir de 2028. Le décret RETEX 2024-1258 a en outre prévu une clause de transition pour les réseaux classés.",
+ r:"Décret n° 2021-1004, annexe chap. III, II ; décret n° 2024-1258"},
+{s:2,t:1,q:"Le coefficient Miinfra (modulation de l'Icconstruction_max pour les infrastructures) se déclenche lorsque :",
+ o:["l'impact du lot 1 (VRD) dépasse 20 kg éq. CO2/m²","l'impact du lot 2 (fondations et infrastructure) dépasse 40 kg éq. CO2/m², à hauteur du dépassement","le bâtiment comporte plus de 2 niveaux de sous-sol","l'impact des fondations dépasse 10 % de l'Icconstruction"],c:1,
+ e:"Miinfra = Iclot2 - 40 si Iclot2 > 40 kg éq. CO2/m² (0 sinon) : le seuil est relevé de l'impact réel au-delà de 40. Ne pas confondre avec Mivrd, homologue pour le lot 1 (VRD) avec un seuil à 20 kg éq. CO2/m². Ces modulations neutralisent l'impact des sujétions de site (parkings enterrés, réseaux longs).",
+ r:"Décret n° 2021-1004, annexe chap. III, III"},
+{s:2,t:2,q:"Les données météorologiques utilisées par Th-BCE 2020 sont :",
+ o:["les données réelles de l'année de construction","des années types conventionnelles par zone climatique, établies sur la période 2000-2018","les données de l'année 2003 (canicule de référence)","des données saisies librement par le bureau d'études"],c:1,
+ e:"Huit fichiers météo conventionnels (un par zone H1a à H3), constitués en années types sur 2000-2018 — actualisation vs RT2012 qui reposait sur des données plus anciennes. Le BET ne choisit que la zone (département) et l'altitude ; tout le reste est conventionnel.",
+ r:"Méthode Th-BCE 2020 ; guide RE2020 DHUP"},
+{s:2,t:2,q:"Un bâtiment collectif de 2 400 m² de Sref compte 40 logements. Sa surface moyenne Smoylgt, utilisée notamment pour les modulations et le DH_max, vaut :",
+ o:["40 m²","55 m²","60 m²","On ne peut pas la calculer sans la SHONrt"],c:2,
+ e:"Smoylgt = Sref / NL = 2400/40 = 60 m². Cette surface moyenne pilote la modulation Mbsurf_moy/Mcsurf_moy (les petits logements ont des seuils par m² plus généreux, ratio surface déperditive/surface plus défavorable) et intervient dans le DH_max des logements collectifs climatisés.",
+ r:"Décret n° 2021-1004, annexe chap. I, XI"},
+{s:2,t:2,q:"Pour un bâtiment comportant plusieurs zones d'usages différents (ex. logements + bureaux), les seuils réglementaires (Bbio_max, Cep_max…) du bâtiment sont :",
+ o:["ceux de l'usage majoritaire appliqués à tout le bâtiment","les plus sévères des deux usages","calculés au prorata des surfaces de référence de chaque zone","calculés séparément sans jamais être combinés"],c:2,
+ e:"Les valeurs maximales du bâtiment sont la moyenne des seuils de chaque zone pondérée par leur Sref. Chaque zone est saisie avec son usage et ses scénarios propres ; l'exigence se vérifie à l'échelle du bâtiment ainsi recomposé.",
+ r:"Décret n° 2021-1004, annexe chap. II, V"},
+{s:2,t:2,q:"Les scénarios conventionnels d'occupation et d'usage (températures de consigne, apports internes, besoins d'ECS…) de la méthode Th-BCE 2020 :",
+ o:["sont modifiables par le BET pour coller au projet réel","sont imposés par la méthode selon l'usage de la zone","sont fournis par le maître d'ouvrage","sont issus du DPE"],c:1,
+ e:"C'est le principe même d'un calcul conventionnel : les scénarios sont fixés par la méthode pour permettre la comparaison entre projets. Conséquence à connaître : le calcul réglementaire n'est pas une prévision de consommation réelle — c'est le message clé du rapport de synthèse au MOA.",
+ r:"Méthode Th-BCE 2020 ; guide RE2020 DHUP"},
+{s:2,t:3,q:"Le coefficient Ue d'un plancher bas sur terre-plein se calcule :",
+ o:["comme un mur, avec Rsi + ΣR + Rse","selon une méthode spécifique faisant intervenir la dimension caractéristique du plancher B' (surface/demi-périmètre)","forfaitairement à 0,2 W/(m².K)","uniquement par simulation numérique 3D"],c:1,
+ e:"Les échanges avec le sol suivent une méthode dédiée (type ISO 13370, reprise dans les règles Th-Bat) : le U équivalent dépend de la dimension caractéristique B' = A/(P/2), de l'isolation et de la profondeur d'encastrement. Un grand plancher compact déperd moins par m² qu'un petit plancher étiré.",
+ r:"Règles Th-Bat, parois en contact avec le sol"},
+{s:2,t:3,q:"Le coefficient Uw d'une fenêtre résulte :",
+ o:["du seul vitrage (Ug)","de la moyenne arithmétique entre Ug et Uf","de la combinaison du vitrage (Ug), de la menuiserie (Uf) et du pont thermique de l'intercalaire (ψg), pondérés par les surfaces et linéaires","du certificat Acotherm uniquement"],c:2,
+ e:"Uw = (Ag·Ug + Af·Uf + lg·ψg)/(Ag+Af). L'intercalaire « warm edge » réduit ψg. Pour la saisie réglementaire : valeurs certifiées (NF, Acotherm...), valeurs déclarées justifiées, ou valeurs tabulées Th-Bat par défaut, plus pénalisantes.",
+ r:"Règles Th-Bat, parois vitrées"},
+{s:2,t:3,q:"En RE2020, l'exigence d'accès à l'éclairage naturel en logement impose que la surface totale des baies soit :",
+ o:["≥ 1/6 de la surface de référence","≥ 1/6 de la surface de façade","≥ 1/4 de la surface habitable","≥ 15 % de la surface de plancher"],c:0,
+ e:"La surface totale des baies (tableaux) doit atteindre au moins 1/6 de la Sref en habitation. En RT2012 la règle était 1/6 de la SHAB — comme Sref = SHAB en RE2020 pour l'habitation, la règle est restée matériellement équivalente.",
+ r:"Arrêté du 4 août 2021 (caractéristiques minimales) ; guide RE2020 DHUP"},
+{s:2,t:3,q:"Le facteur solaire Sw d'une baie représente :",
+ o:["la part du rayonnement solaire incident transmise au local (directement ou après absorption-réémission)","la part de lumière visible transmise","le rapport entre surface vitrée et surface de la baie","l'angle d'incidence maximal du soleil"],c:0,
+ e:"Sw (0 à 1) est le rapport entre l'énergie solaire entrant dans le local et l'énergie incidente. À distinguer de TLw (transmission lumineuse, pour l'éclairage naturel). Sw élevé favorise les apports d'hiver (Bbio chauffage) mais dégrade le confort d'été (DH) : c'est un des arbitrages clés de conception.",
+ r:"Règles Th-Bat, parois vitrées"},
+{s:2,t:3,q:"L'inertie thermique du bâtiment prise en compte dans Th-BCE (classes de très légère à très lourde) influence principalement :",
+ o:["uniquement les déperditions par transmission","l'amortissement des variations de température : besoins de chauffage/refroidissement et DH","le débit de ventilation conventionnel","la perméabilité à l'air"],c:1,
+ e:"L'inertie (quotidienne et séquentielle) détermine la capacité à stocker/déstocker la chaleur : elle lisse les pointes, valorise la surventilation nocturne et améliore le DH. Elle se détermine par classes selon les points d'inertie des parois (méthode forfaitaire Th-I) ou par calcul.",
+ r:"Règles Th-Bat / Th-I ; méthode Th-BCE 2020"},
+{s:2,t:4,q:"Dans la méthode, l'efficacité par défaut de l'échangeur d'une VMC double flux (sans justificatif produit) est :",
+ o:["90 %","75 %","50 %","0 %"],c:2,
+ e:"Sans valeur certifiée ou justifiée, la méthode retient une efficacité par défaut pénalisante de 50 %. Avec un produit certifié (ex. NF, Eurovent, Passive House) on saisit la valeur justifiée — souvent 75-90 %. Illustration du principe : donnée par défaut = pénalité.",
+ r:"Méthode Th-BCE ; tuto de saisie Pleiades (ventilation mécanique)"},
+{s:2,t:4,q:"Pour le calcul du Bbio en logement, les débits de ventilation pris en compte sont :",
+ o:["les débits maximaux des bouches","les débits hygiéniques réglementaires conventionnels ; un surdimensionnement éventuel n'améliore pas le Bbio","les débits mesurés à réception","librement choisis par le BET"],c:1,
+ e:"Le Bbio est calculé avec les débits hygiéniques conventionnels (arrêté du 24 mars 1982 en logement). Sur-ventiler n'apporte rien au Bbio mais dégrade le Cep (consommation des ventilateurs et déperditions par renouvellement d'air comptées).",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (ventilation)"},
+{s:2,t:4,q:"En RE2020, l'électricité photovoltaïque produite sur le bâtiment est valorisée dans le Cep :",
+ o:["en totalité, y compris la part exportée au réseau","à hauteur de la part autoconsommée par les usages réglementaires du bâtiment","uniquement si l'installation dépasse 3 kWc","pas du tout : le PV ne compte que dans l'Icconstruction"],c:1,
+ e:"La production autoconsommée vient en déduction des consommations (au pas horaire) ; l'électricité exportée ne réduit pas le Cep — contrairement à la logique Bepos du label E+C-. Attention aussi au volet ACV : les panneaux pèsent dans l'Icconstruction (lot 13, modulation Mipv depuis le décret 2024-1258).",
+ r:"Méthode Th-BCE 2020 ; guide RE2020 DHUP ; décret n° 2024-1258"},
+{s:2,t:4,q:"Un générateur (chaudière, PAC…) déclaré « situé dans un local non chauffé » plutôt qu'en volume chauffé a pour conséquence :",
+ o:["aucune, l'emplacement est purement descriptif","ses pertes ne sont pas récupérables par l'ambiance chauffée et son environnement de calcul est plus froid","une majoration automatique du Cep de 10 %","l'interdiction de le raccorder à un ballon"],c:1,
+ e:"L'emplacement de la génération (volume chauffé, espace tampon, extérieur) détermine la température ambiante de calcul et la récupérabilité des pertes. Un générateur en volume chauffé voit ses pertes partiellement valorisées ; en local non chauffé ou dehors, elles sont perdues.",
+ r:"Méthode Th-BCE ; tuto Pleiades (générations)"},
+{s:2,t:4,q:"Pour un bâtiment raccordé à un réseau de chaleur urbain, le Cep,nr dépend :",
+ o:["du taux d'énergies renouvelables et de récupération (ENR&R) du réseau, via son arrêté ou sa fiche","d'un forfait national unique de 0,5","du seul combustible d'appoint du réseau","de rien : les réseaux comptent pour zéro"],c:0,
+ e:"Le contenu du réseau (taux ENR&R, contenu CO2) est propre à chaque réseau (valeurs publiées par arrêté « réseaux »). Part non renouvelable ≈ 1 - taux ENR&R pour le Cep,nr ; le contenu CO2 du réseau pilote l'Icénergie. Un réseau vertueux est un levier majeur de conformité en collectif.",
+ r:"Arrêté du 4 août 2021 ; arrêtés annuels contenus CO2 des réseaux"},
+{s:2,t:5,q:"Pour un logement collectif de Smoylgt > 60 m² en catégorie 2 de contraintes extérieures, le DH_max vaut :",
+ o:["1 250 °C.h","1 400 °C.h","2 100 °C.h","2 600 °C.h"],c:2,
+ e:"Logements collectifs, catégorie 2 : 2 600 °C.h (Smoy ≤ 20 m²), 2 850 - 12,5×Smoy (20-60 m²), 2 100 °C.h (> 60 m²). En catégorie 1 non climatisé : 1 250 °C.h quel que soit Smoy.",
+ r:"Décret n° 2021-1004, annexe chap. III, IV"},
+{s:2,t:5,q:"En bureaux, pour une partie de bâtiment en catégorie 3 de contraintes extérieures, le DH_max est :",
+ o:["1 150 °C.h","2 400 °C.h","2 600 °C.h","sans objet : il n'y a pas de seuil DH en catégorie 3"],c:3,
+ e:"Bureaux : 1 150 °C.h (cat. 1 hors climatisé H2d/H3), 2 400 (cat. 1 climatisé en H2d/H3), 2 600 (cat. 2) et pas de seuil en catégorie 3 — contraintes de site telles que l'exigence DH n'est pas applicable. L'enseignement n'a que trois colonnes : 900 / 1 800 / 2 200.",
+ r:"Décret n° 2022-305, annexe (DH_maxcat bureaux et enseignement)"},
+{s:2,t:5,q:"Les brasseurs d'air plafonniers sont pris en compte dans le calcul RE2020 :",
+ o:["ils sont interdits en calcul conventionnel","ils abaissent la température ressentie et améliorent donc l'indicateur DH","ils ne jouent que sur le Cep éclairage","ils remplacent l'exigence de protections solaires"],c:1,
+ e:"Le mouvement d'air créé par les brasseurs augmente la vitesse d'air intérieure et abaisse la température ressentie dans le calcul des DH (levier passif reconnu, surtout en zone sud). Leur consommation est par ailleurs comptée.",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (brasseurs d'air)"},
+{s:2,t:6,q:"Les données du calcul réglementaire (RSEE) doivent être conservées par le maître d'ouvrage après achèvement pendant au moins :",
+ o:["2 ans","6 ans","10 ans","30 ans"],c:1,
+ e:"Six ans à compter du dépôt de la déclaration d'achèvement (DAACT). Elles sont communiquées au premier acquéreur, aux personnes chargées des attestations et au diagnostiqueur DPE.",
+ r:"Décret n° 2021-1004, art. R.172-8 CCH"},
+{s:2,t:6,q:"Un logiciel d'application de la RE2020 (Pleiades, ClimaWin, ArchiWIZARD…) peut être utilisé pour produire des calculs réglementaires si :",
+ o:["il a reçu un rapport d'évaluation positif du ministère en charge de la construction","il est certifié NF Logiciel","son éditeur est adhérent de l'AICVF","il est validé par l'OPQIBI"],c:0,
+ e:"Les logiciels sont évalués par le ministère (procédure d'approbation, silence de 9 mois valant acceptation). La qualification OPQIBI 1332 exige d'ailleurs de posséder une version à jour d'un logiciel ayant reçu un rapport d'évaluation positif, avec justificatif de licence.",
+ r:"Décret n° 2021-1004, art. R.172-6 et R.172-9 ; fiche OPQIBI 1332"},
+{s:2,t:6,q:"Lorsque la méthode de calcul n'est pas applicable à un système innovant, le maître d'ouvrage peut :",
+ o:["exclure le système du calcul","proposer une adaptation de la méthode soumise à l'approbation des ministres (dispositif hérité du « Titre V » RT2012)","appliquer le DPE à la place","demander une dérogation au maire"],c:1,
+ e:"L'article R.172-6 reprend l'esprit du « Titre V » : approbation ministérielle d'une adaptation de méthode pour un projet, un système ou un réseau (silence de 12 mois valant acceptation pour un système, 6 mois pour un réseau). Les outils de pré-traitement Titre V (ex. fenêtres pariétodynamiques) en sont l'application.",
+ r:"Décret n° 2021-1004, art. R.172-6 et R.172-9"},
+{s:2,t:7,q:"Une PAC électrique consomme 10 kWh d'énergie finale. En énergie primaire, cela représente 25,8 kWhep en RT2012 et :",
+ o:["10 kWhep en RE2020","23 kWhep en RE2020","25,8 kWhep en RE2020 également","32 kWhep en RE2020"],c:1,
+ e:"RE2020 : 10 × 2,3 = 23 kWhep (contre 10 × 2,58 = 25,8 en RT2012). La baisse du coefficient (2,58 → 2,3) reflète la décarbonation du mix et favorise les solutions électriques performantes.",
+ r:"Arrêtés RT2012 / RE2020 (conventions énergie primaire)"},
+{s:2,t:7,q:"En RT2012, l'exigence de confort d'été s'exprime par :",
+ o:["des degrés-heures DH ≤ DH_max","la Tic (température intérieure conventionnelle) ≤ Tic de référence, pour les bâtiments CE1","une puissance de climatisation maximale","un facteur solaire moyen minimal"],c:1,
+ e:"RT2012 : Tic ≤ Ticréf (indicateur de pointe sur une séquence chaude), applicable aux bâtiments de catégorie CE1. La RE2020 remplace la Tic par les DH, qui intègrent durée et intensité de l'inconfort sur toute la saison — bien plus discriminant.",
+ r:"Arrêté du 26 octobre 2010, art. 9 ; décret n° 2021-1004"},
+/* ---------- SÉRIE 3 ---------- */
+{s:3,t:0,q:"Les parcs de stationnement associés à un bâtiment RE2020 :",
+ o:["sont totalement exclus du calcul","entrent dans le champ : leur éclairage et leur ventilation sont comptés dans le Cep","ne comptent que dans l'ACV","ne sont pris en compte que s'ils sont clos et couverts de plus de 500 m²"],c:1,
+ e:"L'article R.172-1 inclut la construction des parcs de stationnement associés. Leurs consommations d'éclairage et de ventilation entrent dans le Cep (nouveauté RE2020) et leurs composants pèsent dans l'Icconstruction — avec la modulation Miinfra pour les parkings en infrastructure.",
+ r:"Décret n° 2021-1004, art. R.172-1 et R.172-4"},
+{s:3,t:0,q:"Le décret n° 2026-16 du 15 janvier 2026 étend les exigences RE2020 (section 1) :",
+ o:["aux bâtiments existants rénovés","aux bâtiments d'activités tertiaires spécifiques (hôtels, commerces, santé, etc.) et à usage industriel et artisanal, pour les PC déposés à compter du 1er mai 2026","aux seuls data centers","aux bâtiments agricoles"],c:1,
+ e:"Les usages jusque-là en section 2 (ex-RT2012 « autres usages » : hôtels, restaurants, commerces, enseignement supérieur, santé, aérogares, industrie/artisanat, sport...) basculent en RE2020 pour les demandes déposées à compter du 1er mai 2026, avec leurs propres seuils Bbio/Cep/Ic/DH.",
+ r:"Décret n° 2026-16 du 15/01/2026"},
+{s:3,t:0,q:"Selon la fiche d'application « usage d'un bâtiment », le critère qui fait basculer une résidence pour personnes âgées (ou étudiante) vers l'usage logement collectif RE2020 est :",
+ o:["la surface totale de l'établissement","la présence d'une cuisine dans les logements/chambres","le statut juridique de l'exploitant","la durée moyenne de séjour"],c:1,
+ e:"Chambres/logements avec cuisine (en plus du local de sommeil et de sanitaires) → habitation RE2020 ; sans cuisine → l'établissement relevait des « autres usages » (RT2012, puis RE2020 tertiaire spécifique depuis le décret 2026-16). Le trio sommeil + cuisine + sanitaires est le critère décisif.",
+ r:"Fiche d'application « Usage d'un bâtiment et exigence associée » v1.2 (10/2025)"},
+{s:3,t:1,q:"La valeur moyenne de Cep,nr_max pour une maison individuelle est de :",
+ o:["55 kWhep/m²/an","70 kWhep/m²/an","75 kWhep/m²/an","85 kWhep/m²/an"],c:0,
+ e:"MI : Cep,nr_maxmoyen = 55 et Cep_maxmoyen = 75 kWhep/m²/an. Le Cep,nr (énergie primaire non renouvelable) est le nouvel indicateur RE2020 qui valorise les ENR sur site ou en réseau : bois, solaire, part ENR&R des RCU.",
+ r:"Décret n° 2021-1004, annexe chap. III"},
+{s:3,t:1,q:"Pour les bureaux, les valeurs moyennes (avant modulations) de Bbio_max, Cep,nr_max et Cep_max sont respectivement :",
+ o:["95 points ; 75 ; 85 kWhep/m²/an","63 points ; 55 ; 75 kWhep/m²/an","68 points ; 65 ; 72 kWhep/m²/an","95 points ; 85 ; 75 kWhep/m²/an"],c:0,
+ e:"Bureaux : Bbio 95 points, Cep,nr 75, Cep 85 kWhep/m²/an. Enseignement : Bbio 68 ; Cep,nr 65 (primaire) / 63 (secondaire) ; Cep 72 pour les deux. Le Bbio bureaux est plus élevé car il intègre des besoins d'éclairage et de froid conventionnels plus lourds.",
+ r:"Décret n° 2022-305 du 01/03/2022"},
+{s:3,t:1,q:"En enseignement primaire, le couple (Cep,nr_maxmoyen ; Cep_maxmoyen) vaut :",
+ o:["(55 ; 75)","(63 ; 72)","(65 ; 72)","(70 ; 85)"],c:2,
+ e:"Enseignement primaire : (65 ; 72) ; enseignement secondaire : (63 ; 72) kWhep/m²/an. Ces bâtiments à occupation intermittente (vacances, nuits) ont des seuils serrés ; seule la valeur Cep,nr distingue primaire et secondaire.",
+ r:"Décret n° 2022-305 du 01/03/2022"},
+{s:3,t:1,q:"La modulation Mided de l'Icconstruction_max (impact des données environnementales par défaut) prévoit, pour les PC déposés à partir de 2028 :",
+ o:["une majoration du seuil de 0,3 × (Icded - 370) au-delà de 370 kg éq. CO2/m²","une modulation nulle quel que soit Icded","une réduction du seuil de 0,3 × (Icded - 370) au-delà de 370 kg éq. CO2/m² : l'abus de DED devient pénalisant","la suppression des données par défaut"],c:2,
+ e:"Trajectoire en trois temps : 2022-2024, l'usage massif de DED majorait le seuil (tolérance de jeunesse des FDES) ; 2025-2027, modulation nulle ; à partir de 2028, Mided devient négatif au-delà de 370 kg éq. CO2/m² de Icded — il faudra des FDES/PEP spécifiques pour tenir les seuils.",
+ r:"Décret n° 2021-1004, annexe chap. III (tableau Mided)"},
+{s:3,t:1,q:"Le décret n° 2026-200 du 18 mars 2026 introduit, pour les PC déposés à compter du 1er juillet 2026 :",
+ o:["un nouvel indicateur de biodiversité","des modulations selon la hauteur sous plafond (HSP), une modulation pour les surfaces d'agrément extérieures en collectif et une modulation Miclim_RCU de 25 points pour les bâtiments climatisés raccordés à un RCU classé","la suppression de l'indicateur Cep,nr","le report des jalons 2028"],c:1,
+ e:"Ajustements RETEX : MbHSP/McHSP (habitation, la hauteur sous plafond moyenne module Bbio_max et Cep_max), Miagrément_ext (balcons/loggias en collectif, hors toitures-terrasses), MiHSP, et Miclim_RCU = 25 kg éq. CO2/m² sur l'Icconstruction_max si RCU classé + climatisation. Il assouplit aussi l'Icconstruction des IGH (95 % en 2028/2031) et traite les surélévations ≤ 150 m² ou < 30 % de la Sref existante en exigences alternatives.",
+ r:"Décret n° 2026-200 du 18/03/2026"},
+{s:3,t:2,q:"Le RSEE d'un projet RE2020 contient :",
+ o:["uniquement les résultats énergie (Bbio, Cep)","uniquement le volet ACV","un volet énergie (données et résultats du calcul thermique) et un volet environnemental (ACV, contributeurs)","le DPE du bâtiment"],c:2,
+ e:"Le RSEE est le format XML unique de la RE2020 : volet énergie (héritier du RSET RT2012) + volet environnement (ACV par contributeurs et lots). C'est lui qui alimente les attestations, le contrôle (CREP/récolement) et l'observatoire.",
+ r:"Arrêtés RE2020 (transmission des données)"},
+{s:3,t:2,q:"Dans l'arborescence de saisie Th-BCE (bâtiment > zone > groupe), une « zone » regroupe des parties de bâtiment :",
+ o:["de même usage et de mêmes scénarios conventionnels d'utilisation","de même orientation","desservies par la même génération","de même niveau"],c:0,
+ e:"La zone porte l'usage et ses scénarios (occupation, consignes, ECS…). Le groupe, en dessous, est l'unité de calcul thermique : on y sépare notamment les parties climatisées des non climatisées, ou des locaux à inertie/exposition très différentes. Les parois et systèmes d'émission se rattachent aux groupes.",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (zone / groupe)"},
+{s:3,t:2,q:"Une véranda non chauffée accolée au séjour se saisit comme :",
+ o:["une pièce chauffée ordinaire","un espace tampon solarisé, avec modélisation de ses apports solaires et calcul horaire de son coefficient b","une paroi vitrée équivalente","elle est ignorée du calcul"],c:1,
+ e:"L'espace tampon solarisé (véranda, serre, atrium, double peau) fait l'objet d'une modélisation dynamique simplifiée : sa température d'équilibre horaire tient compte des apports solaires captés, et le b horaire en découle. Un simple garage non chauffé est, lui, un espace tampon « classique » à b forfaitaire.",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (espaces tampons)"},
+{s:3,t:2,q:"L'ACV de la RE2020 est dite « dynamique » parce que :",
+ o:["elle est recalculée chaque année","une émission de gaz à effet de serre a un poids d'autant plus faible qu'elle survient tard dans le cycle de vie (pondération temporelle)","elle utilise des données météo horaires","elle intègre l'inflation"],c:1,
+ e:"L'ACV dynamique simplifiée pondère les émissions selon leur date : un kg de CO2 émis aujourd'hui pèse plus qu'un kg émis dans 40 ans (horizon 100 ans). Cela avantage les matériaux biosourcés (stockage temporaire de carbone) et réduit le poids des fins de vie lointaines. Période d'étude : 50 ans.",
+ r:"Arrêté du 4 août 2021, annexe méthode ACV ; guide RE2020 DHUP"},
+{s:3,t:3,q:"La liaison plancher intermédiaire / mur extérieur (ψ9) est le pont thermique le plus pénalisant en :",
+ o:["isolation par l'extérieur (ITE)","isolation par l'intérieur (ITI)","isolation répartie","toiture froide"],c:1,
+ e:"En ITI, le nez de dalle interrompt l'isolant à chaque niveau : ψ9 atteint couramment 0,6-0,9 W/(m.K) sans rupteur. L'ITE assure la continuité de l'isolant devant les dalles (ψ9 très faible). D'où le garde-fou spécifique ψ9 ≤ 0,6 W/(m.K), qui impose en pratique rupteurs ou planelles isolantes en ITI.",
+ r:"Règles Th-Bat, fascicule ponts thermiques (familles ITI/ITE)"},
+{s:3,t:3,q:"En RE2020, la perméabilité à l'air de l'enveloppe d'une maison individuelle doit respecter :",
+ o:["Q4Pa-surf ≤ 0,6 m³/(h.m²), justifiée par une mesure à réception","Q4Pa-surf ≤ 1,0 m³/(h.m²), justifiée par une mesure à réception","Q4Pa-surf ≤ 1,7 m³/(h.m²) sans mesure obligatoire","n50 ≤ 0,6 vol/h"],c:0,
+ e:"Exigence reconduite de la RT2012 : 0,6 m³/(h.m²) en maison individuelle ou accolée, 1,0 en collectif, sous 4 Pa, rapportée aux parois déperditives hors plancher bas. La mesure en fin de chantier (opérateur autorisé) reste la voie normale de justification en logement.",
+ r:"Arrêté du 4 août 2021 (caractéristiques minimales) ; guide RE2020 DHUP"},
+{s:3,t:3,q:"En logement collectif, la justification de l'étanchéité à l'air peut passer par une mesure sur un échantillon de logements. Dans ce cas :",
+ o:["le résultat est utilisé tel quel","le résultat mesuré est majoré (coefficient de l'ordre de 1,2) pour couvrir l'incertitude d'échantillonnage","seule la cage d'escalier est testée","la mesure est faite sur maquette BIM"],c:1,
+ e:"L'échantillonnage (protocole réglementaire : sélection de logements représentatifs) s'accompagne d'une majoration du résultat (×1,2 environ selon le guide DHUP) ; une majoration s'applique aussi si des travaux impactant l'étanchéité restent à réaliser au moment du test (+0,3). La valeur retenue au calcul doit couvrir la réalité de l'ouvrage livré.",
+ r:"Guide RE2020 DHUP (perméabilité à l'air) ; arrêté mesure / FD P50-784"},
+{s:3,t:3,q:"Le Q4Pa-surf caractérise le débit de fuite d'air :",
+ o:["sous 50 Pa, rapporté au volume chauffé","sous 4 Pa, rapporté à la surface des parois déperditives hors plancher bas","sous 4 Pa, rapporté à la SHAB","sous 10 Pa, rapporté à la surface de façade"],c:1,
+ e:"Q4Pa-surf = débit de fuite sous 4 Pa divisé par la surface de parois froides hors plancher bas (ATbat). À distinguer du n50 (vol/h sous 50 Pa) utilisé ailleurs en Europe et en labels (Passivhaus).",
+ r:"Règles Th-Bat / annexe VII arrêté du 4 août 2021 ; FD P50-784"},
+{s:3,t:4,q:"D'après la fiche d'application dédiée, un émetteur électrique direct à thermostat certifié NF Électricité performance catégorie 3* œil (NF089) est valorisé dans le calcul par :",
+ o:["une variation temporelle équivalente δΘvt = 1,44 × CA (coefficient d'aptitude)","un rendement d'émission de 100 %","une réduction forfaitaire de 10 % du Cep chauffage","un facteur d'intermittence Fint = 0,85"],c:0,
+ e:"La fiche (06/2025) convertit le coefficient d'aptitude CA du thermostat certifié en variation temporelle équivalente : δΘvt_eq_ch = 1,44 × CA (ex. CA = 0,3 → 0,432 K), saisie sur l'émetteur. Les certifications eu.bac, Eurovent ou Keymark ont leurs propres conversions.",
+ r:"Fiche d'application « Variation temporelle des émetteurs électriques directs » v1 (06/2025)"},
+{s:3,t:4,q:"Pour un ascenseur desservant deux bâtiments (calcul RE2020 séparé), la fiche d'application impose de répartir la puissance de veille Pti :",
+ o:["à parts égales entre les bâtiments","au prorata des surfaces de référence desservies","intégralement sur le bâtiment où se situe la machinerie","au prorata du nombre de niveaux"],c:1,
+ e:"L'ascenseur partagé est saisi dans chaque bâtiment avec Pti (et les décréments dP1/dP2) répartis au prorata des Sref desservies. Exemple de la fiche : Pti = 251 W répartis 134/117 W entre deux bâtiments de 898 et 781 m².",
+ r:"Fiche d'application « Prise en compte des ascenseurs partagés » v1 (06/2025)"},
+{s:0,t:4,q:"Dans la saisie d'un ascenseur, la technologie « gearless » (sans réducteur) par rapport à une traction à motoréducteur :",
+ o:["est plus consommatrice","est plus performante (rendement supérieur, moins de pertes mécaniques)","n'a aucune influence sur le calcul","n'est saisissable qu'en IGH"],c:1,
+ e:"La méthode distingue traction à motoréducteur, gearless et hydraulique (la plus défavorable), plus l'option « ne sait pas » qui prend le pire cas. Charge, course, vitesse et taux d'équilibrage complètent la saisie ; les valeurs par défaut de Pti dépendent de la charge.",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (ascenseur)"},
+{s:3,t:4,q:"Les besoins d'ECS du calcul réglementaire logement sont déterminés :",
+ o:["par la puissance du ballon installé","conventionnellement, à partir de la surface/typologie des logements et de scénarios de puisage imposés","par les factures d'eau du MOA","librement par le BET selon le nombre d'occupants réel"],c:1,
+ e:"Comme tous les scénarios Th-BCE, les puisages ECS sont conventionnels (fonction de la surface des logements et de profils horaires types). Le BET saisit le système (production, stockage, distribution, bouclage) mais pas les besoins.",
+ r:"Méthode Th-BCE 2020"},
+{s:3,t:4,q:"L'éclairage des circulations et parties communes d'un immeuble collectif d'habitation :",
+ o:["n'est jamais compté","est compté dans le Cep RE2020 (nouveauté par rapport à la RT2012)","est compté dans le Bbio uniquement","est compté seulement s'il dépasse 5 W/m²"],c:1,
+ e:"C'est l'un des élargissements de périmètre du Cep RE2020, avec les ascenseurs et les parkings. En RT2012, ces consommations « immobilières » des communs n'étaient pas comptabilisées.",
+ r:"Décret n° 2021-1004, art. R.172-4, 2° ; guide RE2020 DHUP"},
+{s:3,t:5,q:"En bureaux, le DH_max d'une partie de bâtiment climatisée en zone H3, catégorie 1, est :",
+ o:["1 150 °C.h","2 400 °C.h","2 600 °C.h","sans seuil"],c:1,
+ e:"Le tableau bureaux distingue : catégorie 1 « générale » = 1 150 °C.h ; catégorie 1 climatisée en H2d/H3 = 2 400 °C.h ; catégorie 2 = 2 600 °C.h ; catégorie 3 = pas de seuil. Un bâtiment climatisé dans le sud a une tolérance DH élargie — l'exigence porte alors surtout sur la sobriété du froid via Cep.",
+ r:"Décret n° 2022-305, annexe (DH bureaux)"},
+{s:3,t:5,q:"En enseignement primaire ou secondaire, les valeurs de DH_max sont :",
+ o:["900 / 1 800 / 2 200 °C.h selon la catégorie et la climatisation","1 250 / 1 850 °C.h","1 150 / 2 400 / 2 600 °C.h","350 / 1 250 °C.h"],c:0,
+ e:"Enseignement : 900 °C.h (cat. 1 hors climatisé H2d/H3), 1 800 °C.h (cat. 1 climatisé H2d/H3), 2 200 °C.h (cat. 2). Seuils plus stricts que les bureaux : l'école fonctionne surtout de jour et les enfants sont plus vulnérables à la chaleur.",
+ r:"Décret n° 2022-305, annexe (DH enseignement)"},
+{s:3,t:5,q:"L'indicateur DH est évalué :",
+ o:["à l'échelle du bâtiment entier uniquement","pour chaque partie de bâtiment thermiquement homogène (chaque groupe), chacune devant respecter DH ≤ DH_max","uniquement pour les pièces orientées au sud","à l'échelle de la zone climatique"],c:1,
+ e:"Le décret précise que le nombre de degrés-heures est évalué « pour chaque partie de bâtiment thermiquement homogène » : la vérification se fait groupe par groupe — un seul local très inconfortable peut faire échouer le projet, même si la moyenne du bâtiment est bonne.",
+ r:"Décret n° 2021-1004, art. R.172-4, 5° et annexe chap. II, IV"},
+{s:3,t:6,q:"L'étude de faisabilité des approvisionnements en énergie (dont ENR) d'un bâtiment neuf :",
+ o:["a été supprimée par la RE2020","reste obligatoire ; le maître d'ouvrage s'engage sur sa réalisation dès l'attestation de dépôt du PC","n'existe qu'en tertiaire","est remplacée par le DPE"],c:1,
+ e:"L'étude de faisabilité des approvisionnements en énergie (art. L.122-1 et D.122-1 s. CCH) demeure : l'attestation PC RE2020 comporte l'engagement du MOA de la réaliser. Elle examine notamment les solutions ENR mobilisables (dont le raccordement à un réseau de chaleur).",
+ r:"CCH, art. L.122-1 ; guide RE2020 DHUP (attestations)"},
+{s:3,t:6,q:"À l'achèvement des travaux, l'attestation RE2020 vérifie :",
+ o:["le seul Cep","le Bbio uniquement","les six exigences de résultat (Bbio, Cep, Cep,nr, Icénergie, Icconstruction, DH) et des exigences de moyens (perméabilité, ventilation, protections solaires, isolation…)","les seules exigences de moyens"],c:2,
+ e:"L'attestation d'achèvement couvre tous les indicateurs seuillés — y compris les Ic, sur la base du RSEE et des justificatifs ACV — plus les vérifications de moyens (mesure de perméabilité en logement, vérification du système de ventilation, contrôle visuel des protections solaires...).",
+ r:"Guide RE2020 DHUP (attestations) ; CCH R.122-24 et s."},
+{s:3,t:7,q:"En RT2012, la formule du Bbiomax est Bbiomaxmoyen × (Mbgéo + Mbalt + Mbsurf), avec Bbiomaxmoyen égal à :",
+ o:["50 points","60 points","63 points","65 points"],c:1,
+ e:"RT2012 : Bbiomaxmoyen = 60 points, modulé multiplicativement par la somme (Mbgéo + Mbalt + Mbsurf) — sans « 1 + » contrairement à la RE2020. Ne pas confondre avec les 63/65 points RE2020 (MI/LC), qui ne sont pas comparables (méthode et surfaces différentes).",
+ r:"Arrêté du 26 octobre 2010, art. 3"},
+{s:3,t:7,q:"Les garde-fous « ponts thermiques » de la RT2012 imposent :",
+ o:["ratio ψ moyen ≤ 0,28 W/(m²SHONrt.K) et ψ9 ≤ 0,6 W/(m.K)","ratio ψ moyen ≤ 0,33 W/(m²SHAB.K) uniquement","ψ de toutes les liaisons ≤ 0,5 W/(m.K)","aucun garde-fou, seulement le Bbio"],c:0,
+ e:"RT2012, art. 19 : ratio moyen de transmission linéique ≤ 0,28 W/(m²SHONrt.K) et, pour les liaisons plancher intermédiaire-mur, ψ9 ≤ 0,6 W/(m.K). La RE2020 reconduit le dispositif avec 0,33 W/(m²Sref.K) — la valeur change surtout parce que la surface de référence change.",
+ r:"Arrêté du 26 octobre 2010, art. 19"},
+{s:3,t:7,q:"En RT2012, toute maison individuelle doit recourir à une source d'énergie renouvelable (ou solution équivalente). Parmi les solutions admises :",
+ o:["2 m² de capteurs solaires thermiques pour l'ECS, une contribution ENR ≥ 5 kWhep/m²SHONrt/an, un raccordement à un réseau de chaleur majoritairement ENR&R, ou une production d'ECS thermodynamique performante","uniquement le photovoltaïque","uniquement le chauffage au bois","une ventilation double flux"],c:0,
+ e:"Article 16 de l'arrêté du 26/10/2010 : ECS solaire (≥ 2 m² de capteurs), OU contribution ENR au Cep ≥ 5 kWhep/m²/an, OU raccordement à un réseau alimenté à plus de 50 % par ENR&R, OU ECS thermodynamique (ou micro-cogénération) répondant aux critères fixés. La double flux n'est pas une ENR.",
+ r:"Arrêté du 26 octobre 2010, art. 16"},
+{s:3,t:8,q:"Pour des bâtiments accolés, la fiche « usage » considère qu'il s'agit d'un seul bâtiment au sens RE2020 lorsque la surface de parois mitoyennes atteint au moins :",
+ o:["5 m² dans tous les cas","15 m² entre maisons individuelles, 50 m² pour les autres usages","100 m² quel que soit l'usage","le tiers de la façade"],c:1,
+ e:"Seuils de mitoyenneté significative : 15 m² (maisons) / 50 m² (autres). En dessous, chaque bâtiment fait l'objet de son propre calcul et de ses propres exigences. Ce point conditionne aussi la qualification « maisons accolées » vs « logements collectifs ».",
+ r:"Fiche d'application « Usage d'un bâtiment et exigence associée » v1.2"},
+{s:3,t:8,q:"Une extension de bâtiment de bureaux de 120 m² de Sref, représentant 20 % de la surface du bâtiment existant, est soumise :",
+ o:["à la RE2020 complète","aux exigences de moyens uniquement (extension non soumise aux indicateurs de résultat)","au Bbio et au DH uniquement","à la RT globale"],c:1,
+ e:"Pour les usages autres que la maison individuelle : si l'extension fait entre 50 et 150 m² ET ≤ 30 % de l'existant → exigences de moyens ; si > 30 % → RE2020 complète dès 50 m² ; ≥ 150 m² → RE2020 complète dans tous les cas. Ici 120 m² et 20 % → exigences de moyens (exigences alternatives de l'arrêté).",
+ r:"Fiche d'application « Extension et petite surface » v1.1 ; arrêté du 4 août 2021 modifié"},
+/* ---------- SÉRIE 4 ---------- */
+{s:4,t:0,q:"Un projet de logements a fait l'objet d'un contrat de louage d'ouvrage signé le 15 septembre 2021 ; le PC est déposé en mars 2022. Quelle réglementation s'applique ?",
+ o:["La RE2020, car le PC est postérieur au 1er janvier 2022","La RT2012, car le contrat de louage d'ouvrage a été signé avant le 1er octobre 2021","La RE2020, car le contrat est postérieur au 1er janvier 2021","Aucune des deux"],c:1,
+ e:"L'exclusion prévue à l'article R.172-1 : les constructions ayant donné lieu à un contrat de louage d'ouvrage ou un CCMI signé avant le 1er octobre 2021 restent en RT2012 même si le PC est déposé après le 1er janvier 2022. Clause de sauvegarde des opérations engagées.",
+ r:"Décret n° 2021-1004, art. R.172-1, I"},
+{s:4,t:0,q:"Depuis le décret n° 2026-200, une surélévation de bâtiment peut relever d'exigences alternatives (au lieu de la RE2020 complète) si sa surface est :",
+ o:["inférieure à 50 m² uniquement","inférieure à 150 m², ou inférieure à 30 % de la surface de référence du bâtiment existant","inférieure à 300 m²","toujours, quelle que soit sa surface"],c:1,
+ e:"Le décret 2026-200 complète l'article R.172-3 : les surélévations < 150 m² OU < 30 % de la Sref existante rejoignent le régime des petites constructions (< 50 m²) et extensions (< 150 m²), pour lesquelles des exigences alternatives peuvent être définies par arrêté. Applicable aux PC déposés à compter du 1er juillet 2026.",
+ r:"Décret n° 2026-200 du 18/03/2026, art. 1"},
+{s:4,t:0,q:"En RE2020, la « catégorie 2 » de contraintes extérieures désigne des parties de bâtiment :",
+ o:["situées en zone sismique","dont les contraintes de site (notamment l'exposition au bruit BR2/BR3) limitent le recours à l'ouverture des baies pour le confort d'été","climatisées, quelle que soit leur localisation","de plus de 8 niveaux"],c:1,
+ e:"Les catégories de contraintes extérieures (chap. V de l'annexe) traduisent la possibilité réelle de rafraîchir par ouverture des baies : un site bruyant (BR2/BR3 — infrastructures de transport) ou très exposé bascule en catégorie 2, ce qui relève les seuils DH_max et module Cep_max via Mccat. À ne pas confondre avec CE1/CE2 de la RT2012, qui intégraient le caractère climatisé.",
+ r:"Décret n° 2021-1004, annexe chap. V ; décret n° 2026-200"},
+{s:4,t:1,q:"L'exigence DH_max :",
+ o:["se module selon la zone climatique et l'altitude comme le Cep_max","ne se module pas : DH_max = DH_maxcat, fonction de la seule catégorie de contraintes extérieures (et de l'usage/climatisation)","dépend de la surface totale du bâtiment","se module selon la classe d'inertie"],c:1,
+ e:"Contrairement à Bbio_max et Cep_max (modulations géo, surface, bruit...), le DH_max est directement la valeur de catégorie : DH_max = DH_maxcat. La sévérité relative en climat chaud passe par le calcul lui-même (fichier météo) et non par le seuil.",
+ r:"Décret n° 2021-1004, annexe chap. II, IV"},
+{s:4,t:1,q:"Pour une maison individuelle dont le PC est déposé en juin 2026, le seuil moyen Icconstruction_maxmoyen applicable est :",
+ o:["640 kg éq. CO2/m²","530 kg éq. CO2/m²","475 kg éq. CO2/m²","415 kg éq. CO2/m²"],c:1,
+ e:"Jalons MI : 640 (2022-2024), 530 (2025-2027), 475 (2028-2030), 415 (2031+). Un PC de juin 2026 relève du jalon 2025-2027, soit 530 kg éq. CO2/m² avant modulations (combles, surface, géo, infra, VRD, DED, PV...).",
+ r:"Décret n° 2021-1004, annexe chap. III"},
+{s:4,t:1,q:"La modulation géographique Migéo de l'Icconstruction_max vaut +30 kg éq. CO2/m² :",
+ o:["en zones H1a/H1b au-dessus de 800 m","en zones H2d et H3, à une altitude ≤ 400 m","dans toute la moitié sud de la France","en zone de montagne uniquement"],c:1,
+ e:"Migéo = 30 kg éq. CO2/m² en H2d/H3 sous 400 m (zone méditerranéenne), 0 ailleurs : il neutralise le surcoût carbone des dispositions constructives locales (dont le recours plus fréquent au refroidissement et ses équipements). C'est une modulation additive en valeur absolue, pas un pourcentage.",
+ r:"Décret n° 2021-1004, annexe chap. III"},
+{s:4,t:1,q:"Pour les immeubles de grande hauteur (IGH), le décret n° 2026-200 prévoit :",
+ o:["une exonération totale d'Icconstruction","un Icconstruction_maxmoyen fixé à 95 % de la valeur du jalon en 2028, puis 95 % de cette valeur en 2031 (dérogation adoucie), et Misurf_tot spécifique","le report de la RE2020 à 2030","un DH_max spécifique de 3 000 °C.h"],c:1,
+ e:"Les IGH (R.146-3 CCH) supportent des sujétions structurelles lourdes (noyaux, stabilité, sécurité incendie) : le décret 2026-200 adoucit leur trajectoire carbone 2028/2031 (facteur 95 % appliqué en cascade) et ajuste Misurf_tot. Signal d'actualité réglementaire à connaître.",
+ r:"Décret n° 2026-200 du 18/03/2026, art. 2"},
+{s:4,t:2,q:"La période d'étude conventionnelle de l'analyse de cycle de vie RE2020 est de :",
+ o:["25 ans","50 ans","60 ans","100 ans"],c:1,
+ e:"PER (période d'étude de référence) = 50 ans : les composants dont la durée de vie est inférieure sont remplacés dans le calcul (renouvellements), et l'Icénergie cumule 50 années de consommations. L'horizon de pondération de l'ACV dynamique est en revanche fixé à 100 ans pour le calcul d'impact.",
+ r:"Arrêté du 4 août 2021, annexe méthode ACV ; guide RE2020 DHUP"},
+{s:4,t:2,q:"Sur l'indicateur Icénergie, quelle conséquence structurelle des contenus carbone conventionnels des énergies ?",
+ o:["Le gaz et l'électricité sont traités à égalité","Le chauffage gaz d'un logement collectif devient très difficile à faire passer, l'électricité performante (PAC) et les réseaux vertueux étant favorisés","Seul le fioul est pénalisé, le gaz reste neutre","Le bois est pénalisé à cause des poussières"],c:1,
+ e:"Le contenu CO2 conventionnel du gaz (≈ 0,23 kg éq. CO2/kWh) est environ 3 à 4 fois supérieur à celui de l'électricité ; avec le seuil Icénergie à 260 kg éq. CO2/m² (LC dès 2025), une solution 100 % gaz dépasse le seuil sur 50 ans. C'est le mécanisme voulu de sortie des énergies fossiles du neuf.",
+ r:"Arrêté du 4 août 2021 (données conventionnelles) ; guide RE2020 DHUP"},
+{s:4,t:2,q:"Les consommations des auxiliaires comptées dans le Cep incluent :",
+ o:["uniquement les ventilateurs de VMC","les auxiliaires de ventilation ET de distribution/génération (circulateurs, pompes...)","uniquement les pompes à chaleur","les ascenseurs"],c:1,
+ e:"Le poste « auxiliaires » couvre ventilateurs et auxiliaires des systèmes thermiques (circulateurs de chauffage/ECS/refroidissement, pompes...). Les ascenseurs relèvent du poste distinct « mobilité interne », nouveauté RE2020. Un bouclage ECS mal conçu se paie donc deux fois : pertes thermiques et pompage.",
+ r:"Décret n° 2021-1004, art. R.172-4, 2° ; méthode Th-BCE 2020"},
+{s:4,t:3,q:"D'après la fiche d'application, une gestion automatique des protections mobiles n'est valorisable dans le calcul que si elle pilote les protections en fonction, simultanément :",
+ o:["de l'éclairement extérieur, de la température intérieure, de l'occupation du local et de la saison","de l'heure et de la date uniquement","de la vitesse du vent et de la pluie","d'une commande smartphone"],c:0,
+ e:"Quatre paramètres simultanés exigés : éclairement extérieur incident, température intérieure, occupation/inoccupation, saison (hiver/mi-saison/été). La fiche encadre aussi la mesure d'éclairement (capteurs sur site, station météo ≤ 10 km ou données satellites maille < 2 km / pas < 15 min) et les niveaux d'horloge jour/nuit.",
+ r:"Fiche d'application « Gestion automatique des protections mobiles » v1.1 (09/2025)"},
+{s:4,t:3,q:"Un volet roulant fermé est pris en compte dans le calcul des déperditions nocturnes par :",
+ o:["une résistance thermique additionnelle ΔR fonction de sa classe de perméabilité à l'air, ajoutée à la fenêtre (Uw → Ujour-nuit)","le remplacement du Uw par le Ug","un forfait de -10 % sur le Bbio","rien : les volets ne comptent pas"],c:0,
+ e:"La fermeture nocturne des protections mobiles apporte une résistance additionnelle ΔR (dépendant de l'étanchéité à l'air de la protection et de la lame d'air), d'où un coefficient moyen jour-nuit Ujn < Uw. Les fascicules Th-Bat « parois vitrées » tabulent ces valeurs (Uws, ΔR).",
+ r:"Règles Th-Bat, fascicule parois vitrées (Ujour-nuit, résistance additionnelle)"},
+{s:4,t:3,q:"Les fascicules « Th-Bat applications » (parois opaques, parois vitrées, ponts thermiques) fournissent :",
+ o:["des valeurs tabulées de coefficients thermiques pour des procédés constructifs courants, utilisables sans calcul mais uniquement dans leurs limites de validité","des valeurs moyennes utilisables pour tout procédé","les performances certifiées des produits du marché","des valeurs contractuelles opposables aux entreprises"],c:0,
+ e:"Ce sont des valeurs par défaut « prêtes à l'emploi » établies conformément aux règles Th-Bat pour des procédés courants (ex. ψ des liaisons ITI/ITE/ITR, U de planchers, Ujn avec volets). Elles ne valent que pour les procédés visés et dans les limites indiquées ; hors de ce cadre, calcul spécifique ou valeur certifiée.",
+ r:"Portail rt-re-batiment — Th-Bat applications (fascicules 2026)"},
+{s:4,t:4,q:"Pour saisir une PAC dans le calcul réglementaire, la performance (COP/SCOP...) à utiliser est en priorité :",
+ o:["celle de la documentation commerciale","une valeur certifiée (NF PAC, Eurovent, Keymark...) ou justifiée selon les normes d'essai ; à défaut, des valeurs par défaut pénalisantes s'appliquent","le COP nominal majoré de 10 %","une valeur au choix du BET"],c:1,
+ e:"Hiérarchie des données d'entrée : valeurs certifiées > valeurs justifiées (essais selon normes) > valeurs par défaut dégradées. Ce principe irrigue toute la saisie (générateurs, échangeurs DF, Uw, FDES/PEP en ACV : données par défaut majorées). Le choix des données doit être traçable dans le rapport au MOA — exigence reprise dans l'instruction OPQIBI des références.",
+ r:"Arrêté du 4 août 2021 (règles d'utilisation des données) ; fiche OPQIBI 1332"},
+{s:4,t:4,q:"Une VMC simple flux hygroréglable de type B est valorisée dans le calcul par :",
+ o:["les débits réduits caractérisés dans son avis technique (entrées d'air et bouches hygro)","le débit maximum permanent","un rendement d'échangeur de 50 %","une infiltration nulle"],c:0,
+ e:"L'hygro B (entrées d'air ET bouches hygroréglables) module les débits selon l'humidité : le calcul valorise les débits moyens réduits définis dans l'avis technique du système. Moins d'air extrait = moins de déperditions et moins de consommation de ventilateur — au prix d'une vigilance accrue sur la QAI réelle.",
+ r:"Méthode Th-BCE ; avis techniques CCFAT (VMC hygro)"},
+{s:4,t:4,q:"En bureaux et enseignement, les débits de ventilation utilisés pour le calcul du Bbio sont :",
+ o:["ceux du CCTP CVC du projet","des débits conventionnels imposés par la méthode selon l'usage, non modifiables à la baisse","les débits du code du travail divisés par deux","nuls si le bâtiment est non climatisé"],c:1,
+ e:"En tertiaire RE2020, le Bbio utilise des débits conventionnels par usage (la méthode fixe des valeurs plancher). Le projet réel (CTA, débits CCTP) est saisi pour le Cep. Attention aussi au respect réglementaire distinct : RSDT/code du travail pour l'hygiène — le calcul thermique ne s'y substitue pas.",
+ r:"Méthode Th-BCE 2020 ; tuto Pleiades (ventilation en RE2020)"},
+{s:4,t:4,q:"Saisir un générateur avec l'option « inconnu / ne sait pas » (technologie non renseignée) conduit la méthode à :",
+ o:["refuser le calcul","retenir les hypothèses les plus défavorables (valeurs par défaut pénalisantes)","prendre la moyenne du marché","ignorer le générateur"],c:1,
+ e:"Principe conservateur systématique : toute donnée non justifiée est prise défavorablement (ex. ascenseur « ne sait pas » = hydraulique pénalisant ; échangeur DF 50 % ; perméabilité par défaut majorée). Le rôle du thermicien est justement de fiabiliser les données d'entrée pour ne pas subir ces pénalités.",
+ r:"Méthode Th-BCE 2020 (conventions par défaut)"},
+{s:4,t:5,q:"Dans le calcul des DH, l'inconfort nocturne est compté dès que la température opérative dépasse :",
+ o:["30 °C","28 °C","26 °C","24 °C"],c:2,
+ e:"La nuit, le seuil de confort reste fixe à 26 °C (protection du sommeil) ; le jour, il évolue de 26 à 28 °C selon la logique adaptative (fonction des températures extérieures moyennes glissantes). D'où l'importance de la surventilation nocturne et de l'inertie dans les projets.",
+ r:"Guide RE2020 DHUP (confort d'été) ; méthode Th-BCE 2020"},
+{s:4,t:5,q:"La RE2020 comporte une exigence de moyens sur les protections solaires :",
+ o:["non, seuls les DH comptent","oui : les baies des locaux à occupation nocturne (sommeil) doivent notamment respecter un facteur solaire maximal, vérifié à l'achèvement (contrôle visuel des protections)","oui, mais uniquement en zone H3","oui : stores électriques obligatoires partout"],c:1,
+ e:"L'arrêté du 4 août 2021 (art. 24 et suivants) fixe des caractéristiques minimales : facteurs solaires plafonds pour les baies des locaux de sommeil (variables selon zone/exposition) et présence de protections solaires. La vérification apparaît dans l'attestation d'achèvement. Les valeurs chiffrées exactes sont dans l'arrêté — retiens le principe et la localisation du texte.",
+ r:"Arrêté du 4 août 2021, art. 24 et s. ; guide RE2020 DHUP"},
+{s:4,t:5,q:"Un projet de logement collectif obtient DH = 900 °C.h avec un DH_max de 1 250 °C.h. Le projet est :",
+ o:["non conforme","conforme, sans aucune autre conséquence","conforme, mais une consommation de refroidissement fictive est intégrée au Cep puisque DH > 350 °C.h","conforme uniquement si une climatisation est installée"],c:2,
+ e:"900 < 1 250 : l'exigence DH est respectée. Mais 900 > 350 : la méthode ajoute la consommation d'une climatisation fictive (refroidissement forfaitaire) dans Cep/Cep,nr/Icénergie — anticipation d'une installation future de clim par les occupants. Double lecture à toujours vérifier dans les résultats.",
+ r:"Guide RE2020 DHUP (confort d'été)"},
+{s:4,t:6,q:"Le bureau d'études thermiques auteur du calcul RE2020 d'une opération :",
+ o:["peut établir lui-même l'attestation d'achèvement","ne fait pas partie des personnes habilitées à attester ; il fournit le RSEE aux vérificateurs (architecte, contrôleur technique, certificateur, diagnostiqueur en MI)","doit être qualifié OPQIBI pour que l'attestation soit valable","signe l'attestation conjointement avec le maire"],c:1,
+ e:"Séparation des rôles : le BET produit l'étude et le RSEE ; l'attestation est établie par un tiers habilité (architecte, CT, OC, diagnostiqueur DPE en maison individuelle). La qualification OPQIBI n'est pas une condition réglementaire de validité du calcul — c'est une preuve de compétence (RGE Études, marchés).",
+ r:"CCH (attestations) ; guide RE2020 DHUP"},
+{s:4,t:6,q:"Concernant l'ACV, l'attestation déposée avec le PC comporte :",
+ o:["le calcul ACV complet et définitif","l'engagement du maître d'ouvrage de réaliser l'évaluation Icconstruction (ACV) au plus tard à l'achèvement, l'Icconstruction étant vérifié à ce stade","une simple estimation carbone au ratio","rien : l'ACV est facultative"],c:1,
+ e:"Au PC : engagement de réaliser l'ACV conformément à la méthode (les données de conception ne sont pas figées). À l'achèvement : vérification du respect d'Icconstruction_max et d'Icénergie_max sur la base du RSEE consolidé (DPGF, FDES/PEP réels, quantités). D'où l'importance du suivi ACV en phase chantier (substitutions de matériaux).",
+ r:"Guide RE2020 DHUP (attestations)"},
+{s:4,t:6,q:"Les données du RSEE doivent être communiquées, à leur demande, notamment :",
+ o:["au premier acquéreur, aux agents habilités au contrôle (CRC), à la personne chargée de l'attestation et au diagnostiqueur DPE","uniquement à l'ADEME","à la DGCCRF exclusivement","aux entreprises de travaux"],c:0,
+ e:"L'article R.172-8 liste les destinataires : premier acquéreur (et suivants dans la limite de conservation), personnes habilitées au contrôle des règles de construction, attestateurs et diagnostiqueurs DPE. Conservation 6 ans par le MOA à compter de la DAACT.",
+ r:"Décret n° 2021-1004, art. R.172-8 CCH"},
+{s:4,t:7,q:"En RT2012, l'attestation jointe au dépôt du permis de construire porte sur :",
+ o:["le Bbio uniquement (+ étude de faisabilité et surface de baies en habitation)","le Bbio et la Tic","le Cep uniquement","les trois exigences Bbio, Cep, Tic"],c:0,
+ e:"Au PC RT2012 : Bbio ≤ Bbiomax (avec prise en compte de l'étude de faisabilité et de la surface minimale de baies). Cep, Tic et perméabilité mesurée sont vérifiés dans l'attestation d'achèvement. La RE2020 a ajouté le confort d'été (DH) dès le PC.",
+ r:"Décret n° 2011-544 et arrêté du 11/10/2011 (attestations RT2012)"},
+{s:4,t:7,q:"L'attestation d'achèvement RT2012 vérifie notamment :",
+ o:["Bbio, Cep et Tic, ainsi que la perméabilité à l'air mesurée en logement","le seul respect du 1/6 de baies","les consommations réelles de la première année","le classement DPE"],c:0,
+ e:"À l'achèvement : cohérence du bâti et des systèmes avec le RSET final — respect de Bbio, Cep, Tic — et mesure d'étanchéité à l'air en habitation (0,6/1,0 m³/(h.m²) sous 4 Pa). Réalisée par architecte, CT, OC ou diagnostiqueur (MI).",
+ r:"Décret n° 2011-544 ; arrêté du 11/10/2011"},
+{s:4,t:7,q:"En RT2012, un bâtiment est classé CE2 lorsque :",
+ o:["il est climatisé et situé dans certaines zones (climat chaud H2d/H3 basse altitude, ou zones de bruit BR2/BR3 contraignant l'ouverture des baies)","il dépasse 5 000 m² de SHONrt","il comporte plus de 50 % de vitrages","il est raccordé à un réseau de chaleur"],c:0,
+ e:"CE2 (RT2012) = locaux climatisés dans des situations où l'ouverture des baies n'est pas une alternative réaliste (bruit, climat). Conséquences : Cepmax majoré (McGES... non — coefficient propre CE2 dans Mctype/Mcgéo) et exigence Tic non applicable. En RE2020, la logique équivalente passe par les « catégories de contraintes extérieures » 1 et 2, indépendantes du choix de climatiser.",
+ r:"Arrêté du 26 octobre 2010 (définition CE1/CE2)"},
+{s:4,t:7,q:"Dans le calcul du Bbio (RT2012 comme RE2020), les pondérations conventionnelles des besoins sont :",
+ o:["Bbio = Bch + Bfr + Becl","Bbio = 2×Bch + 2×Bfr + 5×Becl","Bbio = 5×Bch + 2×Bfr + 2×Becl","Bbio = 3×Bch + 3×Bfr + 3×Becl"],c:1,
+ e:"Bbio (en points) = 2 × besoin de chauffage + 2 × besoin de refroidissement + 5 × besoin d'éclairage (besoins en kWh/m²/an). Le facteur 5 traduit le passage besoin → énergie primaire de l'éclairage, nécessairement électrique. En RE2020, le besoin de froid est calculé systématiquement, même sans climatisation prévue.",
+ r:"Méthodes Th-BCE 2012 / Th-BCE 2020"},
+{s:4,t:8,q:"D'après la fiche d'application, une extension de maison individuelle de 60 m² de Sref est soumise à :",
+ o:["la RE2020 complète","aux exigences Bbio, DH et Ic (sans exigence Cep), plus les exigences de moyens","aux seules exigences de moyens","à rien"],c:1,
+ e:"Segment 50-80 m² des extensions de MI : Bbio_max, DH_max (avec plafond spécifique 1 400 °C.h pour les locaux climatisés en H2d/H3) et exigences carbone, mais pas d'exigence Cep — la production/génération dépend trop de l'existant. En dessous de 50 m² : moyens seuls ; à partir de 80 m² : RE2020 complète.",
+ r:"Fiche d'application « Extension et petite surface » v1.1 (04/2025)"},
+{s:4,t:8,q:"L'exigence d'information sur les consommations en logement (systèmes de mesure ou d'estimation) impose :",
+ o:["un compteur électrique par pièce","que l'occupant soit informé de ses consommations, a minima par type d'énergie et par grandes catégories d'usage (mesure ou estimation admises)","un affichage déporté obligatoire dans le séjour","une télérelève mensuelle par le syndic"],c:1,
+ e:"La fiche d'application (12/2021) précise le dispositif : mesure OU estimation des consommations, restituées à l'occupant par usage (chauffage, refroidissement, ECS, prises...). L'esprit : rendre les consommations visibles, sans imposer une instrumentation lourde.",
+ r:"Fiche d'application « Systèmes de mesure ou d'estimation des consommations en logement » (12/2021)"},
+{s:4,t:8,q:"Une habitation légère de loisirs (HLL) neuve de 60 m², implantée dans un camping :",
+ o:["échappe à toute exigence","relève des exigences RE2020 applicables aux HLL (au-delà de 50 m², le régime se rapproche des exigences courantes)","relève du DPE uniquement","relève de la RT existant"],c:1,
+ e:"Les HLL sont entrées dans le champ au 1/1/2023 avec des exigences adaptées par arrêté : allégées sous 50 m² (selon date de fabrication : éclairage, enveloppe), complètes au-delà. La fiche d'application HLL v1.1 détaille les cas selon surface et date de fabrication.",
+ r:"Fiche d'application « Habitations légères de loisirs » v1.1 (03/2025) ; décret n° 2021-1004, art. R.172-1, II"},
+];
+/* ==================== MOTEUR ==================== */
+let mode=null, qList=[], answers=[], flags=[], cur=0, timer=null, timeLeft=0;
+let sessionErrors=new Set();
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function el(id){return document.getElementById(id);}
+function show(id){["home","quiz","results"].forEach(x=>el(x).classList.add("hidden"));el(id).classList.remove("hidden");window.scrollTo(0,0);}
+function showSeries(){el("seriesPick").classList.toggle("hidden");el("themePick").classList.add("hidden");}
+function showThemes(){el("themePick").classList.toggle("hidden");el("seriesPick").classList.add("hidden");
+  const tp=el("themePills");tp.innerHTML="";
+  THEMES.forEach((t,i)=>{const n=BANK.filter(q=>q.t===i).length;const b=document.createElement("button");b.className="pill";b.textContent=t+" ("+n+")";b.onclick=()=>startTheme(i);tp.appendChild(b);});}
+function prep(q){const idx=shuffle([0,1,2,3]);return{s:q.s,t:q.t,q:q.q,o:idx.map(i=>q.o[i]),c:idx.indexOf(q.c),e:q.e,r:q.r,_src:q};}
+function startExam(which){
+  mode="exam";
+  qList = which==="rand" ? shuffle(BANK).slice(0,30) : shuffle(BANK.filter(q=>q.s===which));
+  qList=qList.map(prep);
+  answers=Array(qList.length).fill(null);flags=Array(qList.length).fill(false);cur=0;
+  timeLeft=45*60;el("chrono").classList.remove("hidden","low");el("flagBtn").classList.remove("hidden");
+  el("qgrid").classList.remove("hidden");el("submitBtn").classList.remove("hidden");
+  clearInterval(timer);timer=setInterval(tick,1000);tick(true);
+  buildGrid();render();show("quiz");}
+function startTheme(i){
+  mode="learn";qList=shuffle(BANK.filter(q=>q.t===i)).map(prep);
+  answers=Array(qList.length).fill(null);flags=Array(qList.length).fill(false);cur=0;
+  el("chrono").classList.add("hidden");el("flagBtn").classList.add("hidden");
+  el("qgrid").classList.add("hidden");el("submitBtn").classList.add("hidden");
+  clearInterval(timer);render();show("quiz");}
+function startErrors(){
+  const errs=BANK.filter((q,idx)=>sessionErrors.has(idx));
+  if(!errs.length)return;
+  mode="learn";qList=shuffle(errs).map(prep);
+  answers=Array(qList.length).fill(null);flags=Array(qList.length).fill(false);cur=0;
+  el("chrono").classList.add("hidden");el("flagBtn").classList.add("hidden");
+  el("qgrid").classList.add("hidden");el("submitBtn").classList.add("hidden");
+  clearInterval(timer);render();show("quiz");}
+function tick(init){
+  if(!init)timeLeft--;
+  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  el("chrono").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  if(timeLeft<=300)el("chrono").classList.add("low");
+  if(timeLeft<=0){clearInterval(timer);finishExam(true);}}
+function buildGrid(){
+  const g=el("qgrid");g.innerHTML="";
+  qList.forEach((q,i)=>{const b=document.createElement("button");b.className="qnum";b.textContent=i+1;b.onclick=()=>{cur=i;render();};g.appendChild(b);});}
+function updateGrid(){
+  [...el("qgrid").children].forEach((b,i)=>{
+    b.className="qnum"+(answers[i]!==null?" answered":"")+(flags[i]?" flagged":"")+(i===cur?" current":"");});}
+function render(){
+  const q=qList[cur];
+  el("progTxt").textContent="Question "+(cur+1)+" / "+qList.length+(mode==="learn"?" — révision":"");
+  el("qTheme").textContent=THEMES[q.t];
+  el("qText").textContent=q.q;
+  const box=el("qOpts");box.innerHTML="";
+  const letters=["A","B","C","D"];
+  q.o.forEach((opt,i)=>{
+    const b=document.createElement("button");b.className="opt";
+    b.innerHTML='<span class="letter">'+letters[i]+'</span><span>'+opt+"</span>";
+    if(mode==="exam"){
+      if(answers[cur]===i)b.classList.add("sel");
+      b.onclick=()=>{answers[cur]=i;render();};
+    }else{
+      if(answers[cur]!==null){
+        if(i===q.c)b.classList.add("good");
+        if(answers[cur]===i&&i!==q.c)b.classList.add("bad");
+        b.disabled=true;
+      }else{b.onclick=()=>{answers[cur]=i;markError(q,i);render();};}
+    }
+    box.appendChild(b);});
+  const ex=el("qExpl");
+  if(mode==="learn"&&answers[cur]!==null){
+    const ok=answers[cur]===q.c;
+    ex.className="expl show "+(ok?"ok":"ko");
+    ex.innerHTML="<b>"+(ok?"Bonne réponse.":"Réponse inexacte — la bonne réponse est "+letters[q.c]+".")+"</b> "+q.e+'<span class="ref">Réf. : '+q.r+"</span>";
+  }else{ex.className="expl";ex.innerHTML="";}
+  el("prevBtn").disabled=(cur===0);
+  el("nextBtn").textContent=(cur===qList.length-1)?(mode==="exam"?"Dernière question":"Terminer"):"Suivant";
+  if(mode==="exam"){el("flagBtn").className="flag-btn"+(flags[cur]?" on":"");el("flagBtn").textContent=flags[cur]?"Marquée":"Marquer";updateGrid();}}
+function markError(q,i){const idx=BANK.indexOf(q._src||q);if(i!==q.c)sessionErrors.add(idx);else sessionErrors.delete(idx);refreshErrBtn();}
+function refreshErrBtn(){
+  const n=sessionErrors.size;
+  el("errBtn").disabled=(n===0);
+  el("errCount").textContent=n===0?"Aucune erreur enregistrée pour l'instant (session en cours uniquement).":n+" question(s) ratée(s) à retravailler.";}
+function toggleFlag(){flags[cur]=!flags[cur];render();}
+function go(d){
+  if(d===1&&cur===qList.length-1){if(mode==="learn"){finishLearn();return;}return;}
+  cur=Math.min(qList.length-1,Math.max(0,cur+d));render();}
+function finishLearn(){
+  const done=answers.filter(a=>a!==null).length;
+  const good=qList.reduce((n,q,i)=>n+(answers[i]===q.c?1:0),0);
+  buildResults(good,done,false);show("results");}
+function finishExam(auto){
+  if(!auto){
+    const blank=answers.filter(a=>a===null).length;
+    if(blank>0&&!confirm(blank+" question(s) sans réponse. Rendre quand même ?"))return;}
+  clearInterval(timer);
+  qList.forEach((q,i)=>{const idx=BANK.indexOf(q._src||q);if(answers[i]!==q.c)sessionErrors.add(idx);else sessionErrors.delete(idx);});
+  refreshErrBtn();
+  const good=qList.reduce((n,q,i)=>n+(answers[i]===q.c?1:0),0);
+  buildResults(good,qList.length,true);show("results");}
+function buildResults(good,total,isExam){
+  const pct=total?Math.round(100*good/total):0;
+  const pass=pct>=80;
+  el("scoreBig").textContent=good+" / "+total+"  ("+pct+" %)";
+  el("scoreBig").className="score-big "+(pass?"pass":"fail");
+  el("verdict").innerHTML=isExam?(pass?"Seuil des 80 % atteint — tu aurais validé ce QCM.":"En dessous du seuil de 80 % (24/30 à l'examen). Analyse la correction puis rejoue tes erreurs."):"Session de révision terminée.";
+  const st={};qList.forEach((q,i)=>{const t=THEMES[q.t];st[t]=st[t]||[0,0];if(answers[i]!==null){st[t][1]++;if(answers[i]===q.c)st[t][0]++;}});
+  let h="<table><tr><th>Thème</th><th>Score</th><th></th></tr>";
+  Object.keys(st).forEach(t=>{const[g,n]=st[t];const p=n?Math.round(100*g/n):0;
+    h+="<tr><td>"+t+"</td><td>"+g+"/"+n+"</td><td><div class='bar'><i style='width:"+p+"%'></i></div></td></tr>";});
+  el("themeStats").innerHTML=h+"</table>";
+  const letters=["A","B","C","D"];
+  let rl="";
+  qList.forEach((q,i)=>{
+    const ua=answers[i];const ok=ua===q.c;
+    rl+='<div class="review-q"><div class="qt">'+(i+1)+". "+q.q+'</div>'
+      +'<div class="ua '+(ok?"right":"wrong")+'">'+(ua===null?"Sans réponse":"Ta réponse : "+letters[ua]+" — "+q.o[ua])+(ok?" (correct)":"")+"</div>"
+      +(!ok?'<div class="ua right">Bonne réponse : '+letters[q.c]+" — "+q.o[q.c]+"</div>":"")
+      +'<div class="ex">'+q.e+'<span class="ref">Réf. : '+q.r+"</span></div></div>";});
+  el("reviewList").innerHTML=rl;
+  el("replayErrBtn").style.display=sessionErrors.size?"inline-block":"none";}
+function quitToHome(){clearInterval(timer);show("home");el("seriesPick").classList.add("hidden");el("themePick").classList.add("hidden");refreshErrBtn();}
+refreshErrBtn();
+</script>
+</body>
+</html>
